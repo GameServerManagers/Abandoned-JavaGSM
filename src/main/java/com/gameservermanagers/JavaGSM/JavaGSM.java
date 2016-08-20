@@ -58,7 +58,7 @@ public class JavaGSM {
                     case "-install":
                         String gameServerName;
                         if (args.length > i + 1 && !args[i + 1].startsWith("-")) gameServerName = args[i + 1];
-                        else { System.out.println(); gameServerName = install_GetGame(); }
+                        else { gameServerName = install_GetGame(); }
                         System.out.println("Installing " + gameServerName + " game server...");
                         System.out.println();
 
