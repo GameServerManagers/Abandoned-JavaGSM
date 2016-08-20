@@ -28,7 +28,7 @@ public class Minecraft {
         for (Method method : Minecraft.class.getDeclaredMethods())
             if (method.getName().startsWith("install_")) availableServerSoftware.add(method.getName().substring(8));
 
-        String requestedSoftware = availableServerSoftware.get(UserInput.questionList("Which server software do you want to install", availableServerSoftware) - 1);
+        String requestedSoftware = availableServerSoftware.get(UserInput.questionList("Which server software do you want to install", availableServerSoftware));
         System.out.println("Installing " + requestedSoftware + "...\n");
 
         // run installer for that specific software

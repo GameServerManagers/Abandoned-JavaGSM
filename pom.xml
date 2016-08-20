@@ -80,6 +80,11 @@
             <artifactId>commons-lang</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 
 </project>

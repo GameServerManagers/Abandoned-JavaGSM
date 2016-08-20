@@ -28,9 +28,17 @@ public class UserInput {
         }
     }
 
-    public static String questionString(String message) {
-        System.out.print(message + "?");
-        return System.console().readLine();
+    public static String questionString(String message, boolean nothingIsOkay) {
+        while (true) {
+            System.out.print(message + "? (string) ");
+            String response = System.console().readLine();
+
+            if (nothingIsOkay) {
+                return response;
+            } else {
+                if (!response.replace(" ", "").isEmpty()) return response;
+            }
+        }
     }
 
     public static int questionList(String message, List<String> options) {
