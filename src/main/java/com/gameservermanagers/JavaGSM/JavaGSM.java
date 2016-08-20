@@ -12,36 +12,62 @@ import org.reflections.util.FilterBuilder;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class JavaGSM {
 
     public static final String version = "0.1.0";
+    public static final Map<String, String> argumentDefinitions = new HashMap<String, String>() {
+        {
+            put("-i (-install)", "Install a new game server");
+        }
+    };
 
     public static void main(String[] args) {
-        UpdateManager.checkForUpdates();
-        //Minecraft.install();
+        // TODO: better header
+        System.out.println("JavaGSM v" + version + " @ScarszRawr\n");
 
-        // TODO: make actual menu shit here instead of just going to installing Minecraft
+        // TODO: make this periodic
+        UpdateManager.checkForUpdates();
+
+        //args = new String[]{"-i"};
 
         if (args.length == 0) {
-            install_GetGame();
+            System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
+            System.out.println("hint: to install a new server use -i");
+            System.out.println();
+
+            int maxSpace = 0;
+            for (Map.Entry<String, String> definition : argumentDefinitions.entrySet())
+                if (maxSpace < definition.getKey().length()) maxSpace = definition.getKey().length();
+
+            for (Map.Entry<String, String> entry : argumentDefinitions.entrySet()) {
+                System.out.print(entry.getKey());
+                for (int i = 0; i < maxSpace - entry.getKey().length(); i++) System.out.print(" ");
+                System.out.println(" | " + entry.getValue());
+            }
+
             System.exit(0);
         }
 
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
+                if (!args[i].startsWith("-")) continue;
                 switch (args[i]) {
                     case "-i":
                     case "-install":
-                        String gameServerName = args.length > i + 1 && !args[i].startsWith("-") ? args[i + 1] : install_GetGame();
+                        String gameServerName;
+                        if (args.length > i + 1 && !args[i + 1].startsWith("-")) gameServerName = args[i + 1];
+                        else { System.out.println(); gameServerName = install_GetGame(); }
+                        System.out.println("Installing " + gameServerName + " game server...");
+                        System.out.println();
+
                         try {
+                            // TODO: check if server destination is already taken
                             new File("servers").mkdir();
-                            Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install");
+                            Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
                             File destination = new File("servers/" + UserInput.questionString("What should the server's main directory be in ./servers/", false));
+                            System.out.println();
                             destination.mkdir();
                             installer.invoke(null, destination);
                         } catch (ClassNotFoundException e) {
