@@ -10,7 +10,7 @@ public class UserInput {
     public static boolean questionYesNo(String message) {
         String response = "";
         while (!response.toLowerCase().startsWith("y") && !response.toLowerCase().startsWith("n")) {
-            System.out.print(message.endsWith(" ") ? message : message + " ");
+            System.out.print(message + "? (y/n) ");
             response = System.console().readLine();
         }
 
@@ -19,7 +19,7 @@ public class UserInput {
 
     public static int questionInt(String message) {
         while (true) {
-            System.out.print(message.endsWith(" ") ? message : message + " ");
+            System.out.print(message + "? (num) ");
             String response = System.console().readLine();
 
             try {
@@ -29,14 +29,14 @@ public class UserInput {
     }
 
     public static String questionString(String message) {
-        System.out.print(message.endsWith(" ") ? message : message + " ");
+        System.out.print(message + "?");
         return System.console().readLine();
     }
 
     public static int questionList(String message, List<String> options) {
         String response = "";
         while ("".equals(response) || !StringUtils.isNumeric(response) || Integer.parseInt(response) < 1 || Integer.parseInt(response) > options.size()) {
-            System.out.println(message.endsWith(" ") ? message : message + " ");
+            System.out.println(message + "?");
             for (String option : options) {
                 System.out.println((options.indexOf(option) + 1) + ": " + option);
             }

@@ -28,7 +28,7 @@ public class Minecraft {
         for (Method method : Minecraft.class.getDeclaredMethods())
             if (method.getName().startsWith("install_")) availableServerSoftware.add(method.getName().substring(8));
 
-        String requestedSoftware = availableServerSoftware.get(UserInput.questionList("Which server software do you want to install?", availableServerSoftware) - 1);
+        String requestedSoftware = availableServerSoftware.get(UserInput.questionList("Which server software do you want to install", availableServerSoftware) - 1);
         System.out.println("Installing " + requestedSoftware + "...\n");
 
         // run installer for that specific software
@@ -59,7 +59,7 @@ public class Minecraft {
         System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + new File(downloadUrl.split("/")[6]).length()/1024L/1024L + "MB");
 
         // write user's input to eula acceptance to file
-        boolean userAgreesToEula = UserInput.questionYesNo("Do you agree to follow the Minecraft EULA?");
+        boolean userAgreesToEula = UserInput.questionYesNo("Do you agree to follow the Minecraft EULA");
         try { FileUtils.writeStringToFile(new File("eula.txt"), "eula=" + userAgreesToEula, Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
 
         // generate non-gsm scripts
