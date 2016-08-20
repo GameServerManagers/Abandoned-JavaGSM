@@ -60,7 +60,7 @@ public class Minecraft {
                 FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
             } else {
                 FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
-                Runtime.getRuntime().exec("chmod +x \"" + destination.getAbsolutePath() + "/Start-NoGSM.sh\""); // TODO: fix this
+                new File(destination, "Start-NoGSM.sh").setExecutable(true);
             }
         } catch (IOException e) {
             e.printStackTrace();
