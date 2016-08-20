@@ -39,8 +39,11 @@ public class JavaGSM {
                     case "-install":
                         String gameServerName = args.length > i + 1 && !args[i].startsWith("-") ? args[i + 1] : install_GetGame();
                         try {
+                            new File("servers").mkdir();
                             Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install");
-                            installer.invoke(null, new File(UserInput.questionString("What should the server's main directory be in ./servers", false)));
+                            File destination = new File("servers/" + UserInput.questionString("What should the server's main directory be in ./servers/", false));
+                            destination.mkdir();
+                            installer.invoke(null, destination);
                         } catch (ClassNotFoundException e) {
                             System.out.println("Invalid game server \"" + gameServerName + "\"");
                         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

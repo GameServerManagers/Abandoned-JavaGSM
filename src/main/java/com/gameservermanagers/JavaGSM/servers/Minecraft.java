@@ -22,7 +22,7 @@ public class Minecraft {
 
     private static final String defaultCommandLine = "java -jar {JARFILE} nogui";
 
-    public static void install() {
+    public static void install(File destination) {
         // populate possible server software
         List<String> availableServerSoftware = new LinkedList<>();
         for (Method method : Minecraft.class.getDeclaredMethods())
@@ -40,7 +40,7 @@ public class Minecraft {
             }
     }
 
-    public static void install_Vanilla() {
+    public static void install_Vanilla(File destination) {
         // find latest version
         System.out.print("Obtaining latest version info...");
         String latestVersion = null;
