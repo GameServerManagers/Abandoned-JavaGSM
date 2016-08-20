@@ -2,6 +2,7 @@ package com.gameservermanagers.JavaGSM;
 
 import com.gameservermanagers.JavaGSM.util.UpdateManager;
 import com.gameservermanagers.JavaGSM.util.UserInput;
+import com.google.gson.Gson;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -22,6 +23,8 @@ public class JavaGSM {
             put("-i (-install)", "Install a new game server");
         }
     };
+
+    public static Gson gson = new Gson();
 
     public static void main(String[] args) {
         // TODO: better header

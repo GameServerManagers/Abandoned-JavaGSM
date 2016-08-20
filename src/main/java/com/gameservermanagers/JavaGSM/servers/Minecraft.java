@@ -1,5 +1,7 @@
 package com.gameservermanagers.JavaGSM.servers;
 
+import com.gameservermanagers.JavaGSM.JavaGSM;
+import com.gameservermanagers.JavaGSM.util.ServerConfig;
 import com.gameservermanagers.JavaGSM.util.UserInput;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -19,8 +21,6 @@ public class Minecraft {
     // TODO: add more stuff to default command line
     // TODO: prompt user for memory specs during install
     // TODO: send installation files to a dedicated server folder instead of current dir
-
-    private static final String defaultCommandLine = "java -jar {JARFILE} nogui";
 
     public static void install(File destination) {
         // populate possible server software
@@ -45,6 +45,9 @@ public class Minecraft {
             return;
         }
 
+        // ask how much memory should be max for this server
+        String memory = UserInput.questionString("How much memory should be this server use (ex. 1G, 512M)", false);
+
         // write user's input to eula acceptance to file
         boolean userAgreesToEula = UserInput.questionYesNo("Do you agree to follow the Minecraft EULA");
         try { FileUtils.writeStringToFile(new File(destination, "eula.txt"), "eula=" + userAgreesToEula, Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
@@ -54,9 +57,9 @@ public class Minecraft {
         boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
         try {
             if (isWindows) {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\n" + defaultCommandLine.replace("{JARFILE}", jarFile), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\n" + ServerConfig.defaultCommandLines.get("minecraft").replace("{JARFILE}", jarFile), Charset.defaultCharset());
             } else {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\n" + defaultCommandLine.replace("{JARFILE}", jarFile), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\n" + ServerConfig.defaultCommandLines.get("minecraft").replace("{JARFILE}", jarFile), Charset.defaultCharset());
                 Runtime.getRuntime().exec("chmod +x \"" + destination.getAbsolutePath() + "/Start-NoGSM.sh\""); // TODO: fix this
             }
         } catch (IOException e) {
@@ -65,6 +68,7 @@ public class Minecraft {
         System.out.println(" done");
         System.out.println();
 
+        try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), JavaGSM.gson.toJson(ServerConfig.minecraft(memory, jarFile)), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
         System.out.println("Finished installing server. Start it with " + new File(destination, "/Start-NoGSM." + (isWindows ? "bat" : "sh")));
     }
 
@@ -87,6 +91,7 @@ public class Minecraft {
         try { FileUtils.copyURLToFile(new URL(downloadUrl), new File(destination, jarFile)); } catch (IOException e) { e.printStackTrace(); }
         System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + new File(destination, jarFile).length()/1024L/1024L + "MB");
 
+        System.out.println();
         return jarFile;
     }
 
