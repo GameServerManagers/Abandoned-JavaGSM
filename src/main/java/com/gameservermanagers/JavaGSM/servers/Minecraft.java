@@ -52,11 +52,12 @@ public class Minecraft {
         System.out.println(" " + latestVersion);
 
         // download vanilla jar
-        String downloadUrl = "https://s3.amazonaws.com/Minecraft.Download/versions/" + latestVersion + "/minecraft_server." + latestVersion + ".jar";
+        String jarFile = "minecraft_server." + latestVersion + ".jar";
+        String downloadUrl = "https://s3.amazonaws.com/Minecraft.Download/versions/" + latestVersion + "/" + jarFile;
         System.out.print("Downloading " + downloadUrl + "...");
         long startTime = System.currentTimeMillis();
-        try { FileUtils.copyURLToFile(new URL(downloadUrl), new File(downloadUrl.split("/")[6])); } catch (IOException e) { e.printStackTrace(); }
-        System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + new File(downloadUrl.split("/")[6]).length()/1024L/1024L + "MB");
+        try { FileUtils.copyURLToFile(new URL(downloadUrl), new File(jarFile)); } catch (IOException e) { e.printStackTrace(); }
+        System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + new File(jarFile).length()/1024L/1024L + "MB");
 
         // write user's input to eula acceptance to file
         boolean userAgreesToEula = UserInput.questionYesNo("Do you agree to follow the Minecraft EULA");
@@ -67,9 +68,9 @@ public class Minecraft {
         boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
         try {
             if (isWindows) {
-                FileUtils.writeStringToFile(new File("Start-NoGSM.bat"), "@echo off\n" + defaultCommandLine.replace("{JARFILE}", downloadUrl.split("/")[6]), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File("Start-NoGSM.bat"), "@echo off\n" + defaultCommandLine.replace("{JARFILE}", jarFile), Charset.defaultCharset());
             } else {
-                FileUtils.writeStringToFile(new File("Start-NoGSM.sh"), "#!/bin/bash\n" + defaultCommandLine.replace("{JARFILE}", downloadUrl.split("/")[6]), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File("Start-NoGSM.sh"), "#!/bin/bash\n" + defaultCommandLine.replace("{JARFILE}", jarFile), Charset.defaultCharset());
                 Runtime.getRuntime().exec("chmod +x Start-NoGSM.sh");
             }
         } catch (IOException e) {
