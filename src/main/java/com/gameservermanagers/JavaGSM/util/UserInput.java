@@ -36,10 +36,11 @@ public class UserInput {
     public static int questionList(String message, List<String> options) {
         String response = "";
         while ("".equals(response) || !StringUtils.isNumeric(response) || Integer.parseInt(response) < 1 || Integer.parseInt(response) > options.size()) {
+            System.out.println(message.endsWith(" ") ? message : message + " ");
             for (String option : options) {
                 System.out.println((options.indexOf(option) + 1) + ": " + option);
             }
-            System.out.print(message.endsWith(" ") ? message : message + " ");
+            System.out.print("# selection: ");
             response = System.console().readLine();
         }
 
