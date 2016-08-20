@@ -46,7 +46,7 @@ public class Minecraft {
         }
 
         // ask how much memory should be max for this server
-        String memory = UserInput.questionString("How much memory should be this server use (ex. 1G, 512M)", false);
+        String memory = UserInput.questionString("How much memory should be this server use (ex. 1G, 512M)", false).toUpperCase();
 
         // write user's input to eula acceptance to file
         boolean userAgreesToEula = UserInput.questionYesNo("Do you agree to follow the Minecraft EULA");
