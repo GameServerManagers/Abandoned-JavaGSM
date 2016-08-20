@@ -44,7 +44,7 @@ public class UserInput {
             response = System.console().readLine();
         }
 
-        return Integer.parseInt(response);
+        return Integer.parseInt(response) - 1;
     }
 
 }
