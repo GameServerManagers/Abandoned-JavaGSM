@@ -35,7 +35,7 @@ public class UserInput {
 
     public static int questionList(String message, List<String> options) {
         String response = "";
-        while (!StringUtils.isNumeric(response) || Integer.parseInt(response) < 1 || Integer.parseInt(response) > options.size()) {
+        while ("".equals(response) || !StringUtils.isNumeric(response) || Integer.parseInt(response) < 1 || Integer.parseInt(response) > options.size()) {
             for (String option : options) {
                 System.out.println((options.indexOf(option) + 1) + ": " + option);
             }
