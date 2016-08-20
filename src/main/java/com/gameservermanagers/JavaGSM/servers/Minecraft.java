@@ -57,9 +57,9 @@ public class Minecraft {
         boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
         try {
             if (isWindows) {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\n" + ServerConfig.defaultCommandLines.get("minecraft").replace("{JARFILE}", jarFile), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
             } else {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\n" + ServerConfig.defaultCommandLines.get("minecraft").replace("{JARFILE}", jarFile), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
                 Runtime.getRuntime().exec("chmod +x \"" + destination.getAbsolutePath() + "/Start-NoGSM.sh\""); // TODO: fix this
             }
         } catch (IOException e) {
