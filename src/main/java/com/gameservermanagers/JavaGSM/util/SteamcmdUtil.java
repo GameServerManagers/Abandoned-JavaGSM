@@ -19,7 +19,7 @@ public class SteamcmdUtil {
     private static String steamcmdArchive = "steamcmd" + (isWindows ? ".zip" : isMac ? "_osx.tar.gz" : "_linux.tar.gz");
     private static String steamcmdExtension = isWindows ? ".exe" : ".sh";
     private static String steamcmdExecutable = "steamcmd" + steamcmdExtension;
-    private static String steamcmdCommand = "+login anonymous +force_install_dir {DESTINATION} +app_update {APP} validate +exit";
+    private static String steamcmdCommand = "+login {LOGIN} +force_install_dir {DESTINATION} +app_update {APP} validate +exit";
     private static String steamcmdUrl = "https://steamcdn-a.akamaihd.net/client/installer/" + steamcmdArchive;
 
     public static boolean check() {
@@ -47,12 +47,16 @@ public class SteamcmdUtil {
         return check(false);
     }
 
-    public static boolean installApp(File destination, String app) {
+    public static boolean installApp(String login, File destination, String app) {
         try {
             SteamcmdUtil.check();
             System.out.println("\nInstalling app " + app + " to " + destination + "...");
 
-            Process steamcmdProcess = Runtime.getRuntime().exec("steamcmd/" + steamcmdExecutable + " " + steamcmdCommand.replace("{DESTINATION}", destination.getAbsolutePath()).replace("{APP}", app));
+            Process steamcmdProcess = Runtime.getRuntime().exec("steamcmd/" + steamcmdExecutable + " " + steamcmdCommand
+                    .replace("{LOGIN}", login)
+                    .replace("{DESTINATION}", destination.getAbsolutePath())
+                    .replace("{APP}", app))
+            ;
 
             StreamGobbler errorGobbler = new StreamGobbler(steamcmdProcess.getErrorStream());
             StreamGobbler outputGobbler = new StreamGobbler(steamcmdProcess.getInputStream());
