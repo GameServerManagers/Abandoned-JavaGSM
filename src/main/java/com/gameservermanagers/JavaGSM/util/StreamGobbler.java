@@ -10,7 +10,7 @@ import java.util.List;
 class StreamGobbler extends Thread {
 
     private InputStream is;
-    public List<String> output = new LinkedList<>();
+    List<String> output = new LinkedList<>();
 
     StreamGobbler(InputStream is) {
         this.is = is;
