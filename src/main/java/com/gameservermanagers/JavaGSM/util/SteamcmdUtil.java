@@ -1,13 +1,19 @@
 package com.gameservermanagers.JavaGSM.util;
 
 import java.io.File;
+import java.io.IOException;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class SteamcmdUtil {
 
     private static boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
-    private static String steamcmdArchive = "steamcmd" + (isWindows ? ".zip" : "_linux.tar.gz");
-    private static String steamcmdExtension = isWindows ? ".bat" : ".sh";
+    private static boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
+    private static boolean isLinux = !isWindows && !isMac;
+
+    private static String steamcmdArchive = "steamcmd" + (isWindows ? ".zip" : isMac ? "_osx.tar.gz" : "_linux.tar.gz");
+    private static String steamcmdExtension = isWindows ? ".exe" : ".sh";
+    private static String steamcmdExecutable = "steamcmd" + steamcmdExtension;
+    private static String steamcmdCommand = "+login anonymous +force_install_dir {DESTINATION} +app_update {APP} validate +exit";
     private static String steamcmdUrl = "https://steamcdn-a.akamaihd.net/client/installer/" + steamcmdArchive;
 
     public static boolean check() {
@@ -22,10 +28,10 @@ public class SteamcmdUtil {
 
         System.out.println(" " + (validSteamcmd ? "installed" : "not installed"));
 
-        return validSteamcmd || attemptInstall && install();
+        return validSteamcmd || attemptInstall && installSteamcmd();
     }
 
-    public static boolean install() {
+    public static boolean installSteamcmd() {
         System.out.println("Installing SteamCMD...");
 
         DownloadUtil.download(steamcmdUrl);
@@ -33,6 +39,15 @@ public class SteamcmdUtil {
         new File(steamcmdArchive).delete();
 
         return check(false);
+    }
+
+    public static void installApp(File destination, String app) {
+        SteamcmdUtil.check();
+        try {
+            Process steamcmdProcess = Runtime.getRuntime().exec("steamcmd/" + steamcmdExecutable + " " + steamcmdCommand.replace("{DESTINATION}", destination.getAbsolutePath()).replace("{APP}", app));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

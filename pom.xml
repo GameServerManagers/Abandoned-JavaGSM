@@ -92,6 +92,11 @@
             <artifactId>zip4j</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.rauschig</groupId>
+            <artifactId>jarchivelib</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 
 </project>
