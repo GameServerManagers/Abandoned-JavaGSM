@@ -1,6 +1,7 @@
 package com.gameservermanagers.JavaGSM.servers;
 
 import com.gameservermanagers.JavaGSM.JavaGSM;
+import com.gameservermanagers.JavaGSM.util.DownloadUtil;
 import com.gameservermanagers.JavaGSM.util.ServerConfig;
 import com.gameservermanagers.JavaGSM.util.UserInput;
 import org.apache.commons.io.FileUtils;
@@ -10,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,8 +19,18 @@ import java.util.List;
 public class Minecraft {
 
     // TODO: add more stuff to default command line
-    // TODO: prompt user for memory specs during install
-    // TODO: send installation files to a dedicated server folder instead of current dir
+
+    private static String getLatestVersion() {
+        System.out.print("Obtaining latest version info...");
+        String latestVersion = null;
+        try { latestVersion = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("release\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
+        if (latestVersion == null) {
+            System.out.println("An error occurred during checking the latest version, aborting installation");
+            return null;
+        }
+        System.out.println(" " + latestVersion);
+        return latestVersion;
+    }
 
     public static void install(File destination) {
         // populate possible server software
@@ -36,6 +46,7 @@ public class Minecraft {
         for (Method method : Minecraft.class.getDeclaredMethods())
             if (method.getName().equals("install_" + requestedSoftware)) try {
                 jarFile = String.valueOf(method.invoke(null, destination));
+                System.out.println();
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -57,9 +68,9 @@ public class Minecraft {
         boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
         try {
             if (isWindows) {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
             } else {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
+                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
                 new File(destination, "Start-NoGSM.sh").setExecutable(true);
             }
         } catch (IOException e) {
@@ -74,25 +85,53 @@ public class Minecraft {
 
     public static String install_Vanilla(File destination) {
         // find latest version
-        System.out.print("Obtaining latest version info...");
-        String latestVersion = null;
-        try { latestVersion = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("release\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
-        if (latestVersion == null) {
-            System.out.println("An error occurred during checking the latest version, aborting installation");
-            return null;
-        }
-        System.out.println(" " + latestVersion);
+        String latestVersion = getLatestVersion();
+        if (latestVersion == null) return null;
 
         // download vanilla jar
         String jarFile = "minecraft_server." + latestVersion + ".jar";
         String downloadUrl = "https://s3.amazonaws.com/Minecraft.Download/versions/" + latestVersion + "/" + jarFile;
-        System.out.print("Downloading " + downloadUrl + "...");
-        long startTime = System.currentTimeMillis();
-        try { FileUtils.copyURLToFile(new URL(downloadUrl), new File(destination, jarFile)); } catch (IOException e) { e.printStackTrace(); }
-        System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + new File(destination, jarFile).length()/1024L/1024L + "MB");
+        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
 
-        System.out.println();
         return jarFile;
+    }
+
+    public static String install_CraftBukkit(File destination) {
+        // download spigot jar
+        String jarFile = "craftbukkit.jar";
+        String downloadUrl = "http://scarsz.tech:8080/job/CraftBukkit-Spigot/lastSuccessfulBuild/artifact/" + jarFile;
+        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
+
+        return jarFile;
+    }
+
+    public static String install_Spigot(File destination) {
+        // download spigot jar
+        String jarFile = "spigot.jar";
+        String downloadUrl = "http://scarsz.tech:8080/job/CraftBukkit-Spigot/lastSuccessfulBuild/artifact/" + jarFile;
+        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
+
+        return jarFile;
+    }
+
+    public static String install_KCauldron(File destination) {
+        // find the latest version
+        System.out.print("Obtaining latest KCauldron build...");
+        String[] splitVersions = new String[0];
+        try { splitVersions = Jsoup.connect("https://api.prok.pw/repo/versions/pw.prok/KCauldron").ignoreContentType(true).get().html().split("version"); } catch (IOException e) { e.printStackTrace(); } // download latest versions JSON
+        String latestVersion = splitVersions[splitVersions.length - 1].substring(3).split("\"")[0]; // shitty JSON parsing, come @ me, square up homie
+        System.out.println(" " + latestVersion);
+
+        // download/extract/delete the latest bundle
+        String bundleFile = "KCauldron-" + latestVersion + "-bundle.zip";
+        String downloadUrl = "https://repo.prok.pw/pw/prok/KCauldron/" + latestVersion + "/" + bundleFile;
+        DownloadUtil.download(downloadUrl, new File(destination, bundleFile)); // download bundle
+        DownloadUtil.unzip(new File(destination, bundleFile)); // unzip downloaded zip
+        new File(destination, bundleFile).delete(); // delete extracted zip
+        new File(destination, "README.txt").delete(); // delete pointless readme
+
+        for (File file : destination.listFiles()) if (file.getAbsolutePath().endsWith(".jar")) return file.getName();
+        return "KCauldron.jar";
     }
 
 }

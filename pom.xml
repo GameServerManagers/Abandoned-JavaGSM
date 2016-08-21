@@ -90,6 +90,11 @@
             <artifactId>gson</artifactId>
             <version>RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
 
 </project>
