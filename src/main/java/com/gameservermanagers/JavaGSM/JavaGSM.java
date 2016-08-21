@@ -18,11 +18,9 @@ import java.util.*;
 public class JavaGSM {
 
     public static final String version = "0.1.0";
-    public static final Map<String, String> argumentDefinitions = new HashMap<String, String>() {
-        {
-            put("-i (-install)", "Install a new game server");
-        }
-    };
+    public static final Map<String, String> argumentDefinitions = new HashMap<String, String>() {{
+        put("-i (-install)", "Install a new game server");
+    }};
 
     public static Gson gson = new Gson();
 
