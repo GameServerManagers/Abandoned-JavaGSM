@@ -2,9 +2,15 @@ package com.gameservermanagers.JavaGSM.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class SteamcmdUtil {
+
+    public static Map<String, String> errorResolutions = new HashMap<String, String>(){{
+        put("Invalid platform", "This server does not support this OS; nothing we can do about it.");
+    }};
 
     private static boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
     private static boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
@@ -41,13 +47,49 @@ public class SteamcmdUtil {
         return check(false);
     }
 
-    public static void installApp(File destination, String app) {
-        SteamcmdUtil.check();
+    public static boolean installApp(File destination, String app) {
         try {
+            SteamcmdUtil.check();
+            System.out.println("\nInstalling app " + app + " to " + destination + "...");
+
             Process steamcmdProcess = Runtime.getRuntime().exec("steamcmd/" + steamcmdExecutable + " " + steamcmdCommand.replace("{DESTINATION}", destination.getAbsolutePath()).replace("{APP}", app));
-        } catch (IOException e) {
+
+            StreamGobbler errorGobbler = new StreamGobbler(steamcmdProcess.getErrorStream());
+            StreamGobbler outputGobbler = new StreamGobbler(steamcmdProcess.getInputStream());
+            errorGobbler.start();
+            outputGobbler.start();
+            steamcmdProcess.waitFor();
+
+            System.out.println("Steam finished with exit code " + steamcmdProcess.exitValue() + "\n");
+            
+            System.out.print("Scanning output for errors...");
+            List<String> errors = scanForErrors(outputGobbler.output);
+            if (errors.size() != 0) {
+                System.out.println(" " + errors.size() + " errors found:");
+                for (String error : errors) {
+                    System.out.println("- " + error);
+                    System.out.println("  Resolution: " + getResolutionForError(error));
+                }
+                System.out.println();
+                return false;
+            } else {
+                System.out.println(" none found");
+                return true;
+            }
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            return false;
         }
+    }
+
+    public static List<String> scanForErrors(List<String> output) {
+        return output.stream().filter(s -> s.startsWith("ERROR!")).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    public static String getResolutionForError(String error) {
+        for (Map.Entry<String, String> entry : errorResolutions.entrySet())
+            if (error.contains(entry.getKey())) return entry.getValue();
+        return "Unknown. :(";
     }
 
 }
