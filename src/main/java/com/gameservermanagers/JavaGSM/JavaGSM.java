@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@SuppressWarnings("WeakerAccess")
 public class JavaGSM {
 
     public static final String version = "0.1.0";
