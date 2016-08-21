@@ -20,7 +20,11 @@ public class JavaGSM {
 
     public static final String version = "0.1.0";
     public static final Map<String, String> argumentDefinitions = new HashMap<String, String>() {{
-        put("-i (-install)", "Install a new game server");
+        put("-c (-configure)", "Configure GSM or an existing server");
+        put("-i (-install)", "Install a new server");
+        put("-s (-start)", "Start a non-running existing server");
+        put("-st (-stop)", "Stop a running existing server");
+        put("-u (-update)", "Update an existing server");
     }};
 
     public static Gson gson = new Gson();
@@ -32,8 +36,6 @@ public class JavaGSM {
         // TODO: make this periodic
         UpdateManager.checkForUpdates();
         System.out.println();
-
-        //args = new String[]{"-i"};
 
         if (args.length == 0) {
             System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
@@ -53,39 +55,36 @@ public class JavaGSM {
             System.exit(0);
         }
 
-        if (args.length > 0) {
-            for (int i = 0; i < args.length; i++) {
-                if (!args[i].startsWith("-")) continue;
-                switch (args[i]) {
-                    case "-i":
-                    case "-install":
-                        String gameServerName;
-                        if (args.length > i + 1 && !args[i + 1].startsWith("-")) gameServerName = args[i + 1];
-                        else { gameServerName = install_GetGame(); }
-                        System.out.println("Installing " + gameServerName + " server...");
-                        System.out.println();
+        for (int i = 0; i < args.length; i++) {
+            if (!args[i].startsWith("-")) continue;
+            switch (args[i]) {
+                case "-i":
+                case "-install":
+                    String gameServerName;
+                    if (args.length > i + 1 && !args[i + 1].startsWith("-")) gameServerName = args[i + 1];
+                    else { gameServerName = install_GetGame(); }
+                    System.out.println("Installing " + gameServerName + " server...");
+                    System.out.println();
 
-                        try {
-                            // TODO: check if server destination is already taken
-                            new File("servers").mkdir();
-                            Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
-                            File destination = new File("servers/" + UserInput.questionString("What should the server's main directory be in ./servers/", false));
-                            System.out.println();
-                            destination.mkdir();
-                            installer.invoke(null, destination);
-                        } catch (ClassNotFoundException e) {
-                            System.out.println("Invalid server \"" + gameServerName + "\"");
-                        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                            System.out.println("This should have never happened. Fuck.");
-                            e.printStackTrace();
-                        }
-                        break;
-                    default:
-                        System.out.println("Unknown argument \"" + args[i] + "\"");
-                        break;
-                }
+                    try {
+                        // TODO: check if server destination is already taken
+                        new File("servers").mkdir();
+                        Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
+                        File destination = new File("servers/" + UserInput.questionString("What should the server's main directory be in ./servers/", false));
+                        destination.mkdir();
+                        System.out.println();
+                        installer.invoke(null, destination);
+                    } catch (ClassNotFoundException e) {
+                        System.out.println("Invalid server \"" + gameServerName + "\"");
+                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                        System.out.println("This should have never happened. Fuck.");
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    System.out.println("Unknown argument \"" + args[i] + "\"");
+                    break;
             }
-            System.exit(0);
         }
     }
 
