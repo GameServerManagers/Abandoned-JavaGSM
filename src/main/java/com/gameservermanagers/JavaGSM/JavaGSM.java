@@ -32,6 +32,7 @@ public class JavaGSM {
 
         // TODO: make this periodic
         UpdateManager.checkForUpdates();
+        System.out.println();
 
         //args = new String[]{"-i"};
 
