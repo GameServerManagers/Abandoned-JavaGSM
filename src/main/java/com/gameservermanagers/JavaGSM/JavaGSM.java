@@ -19,7 +19,7 @@ import java.util.*;
 public class JavaGSM {
 
     public static final String version = "0.1.0";
-    public static final Map<String, String> argumentDefinitions = new HashMap<String, String>() {{
+    public static final Map<String, String> argumentDefinitions = new LinkedHashMap<String, String>() {{
         put("-c (-configure)", "Configure GSM or an existing server");
         put("-i (-install)", "Install a new server");
         put("-s (-start)", "Start a non-running existing server");
