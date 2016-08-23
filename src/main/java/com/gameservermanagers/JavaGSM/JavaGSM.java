@@ -89,8 +89,10 @@ public class JavaGSM {
     }
 
     private static String install_GetGame() {
+        // don't attempt to understand this
         Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new SubTypesScanner(false), new ResourcesScanner()).setUrls(ClasspathHelper.forClassLoader(Arrays.asList(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader()).toArray(new ClassLoader[0]))).filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.gameservermanagers.JavaGSM.servers"))));
         Set<Class<?>> availableServerClasses = reflections.getSubTypesOf(Object.class);
+
         List<String> choices = new LinkedList<>();
         availableServerClasses.forEach(serverClass -> {
             String[] actualNameArray = serverClass.getName().split("\\.");
