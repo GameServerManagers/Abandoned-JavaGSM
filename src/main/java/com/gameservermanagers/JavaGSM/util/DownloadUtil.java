@@ -3,6 +3,8 @@ package com.gameservermanagers.JavaGSM.util;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.rauschig.jarchivelib.ArchiverFactory;
 
 import java.io.File;
@@ -58,6 +60,25 @@ public class DownloadUtil {
         }
 
         System.out.println(" done in " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
+    public static void clone(String uri) {
+        clone(uri, new File("."));
+    }
+    public static void clone(String uri, File destination) {
+        System.out.print("Cloning " + uri + " into " + destination + "...");
+        long startTime = System.currentTimeMillis();
+        try { Git.cloneRepository().setURI(uri).setDirectory(destination).call(); } catch (GitAPIException e) { e.printStackTrace(); }
+        System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + destination.length()/1024L/1024L + "MB");
+    }
+
+    public static void moveAllChildrenOfFolderToParent(File target) {
+        moveAllChildrenOfFolderToParent(target, false);
+    }
+    public static void moveAllChildrenOfFolderToParent(File target, boolean deleteTarget) {
+        for (File file : target.listFiles())
+            file.renameTo(new File(file.getParentFile().getParentFile(), file.getName()));
+        if (deleteTarget) target.delete();
     }
 
 }
