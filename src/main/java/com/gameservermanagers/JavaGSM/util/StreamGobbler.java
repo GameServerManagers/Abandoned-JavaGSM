@@ -7,12 +7,12 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
-class StreamGobbler extends Thread {
+public class StreamGobbler extends Thread {
 
     private InputStream is;
     List<String> output = new LinkedList<>();
 
-    StreamGobbler(InputStream is) {
+    public StreamGobbler(InputStream is) {
         this.is = is;
     }
 
