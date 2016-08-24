@@ -46,6 +46,7 @@ public class JavaGSM {
             System.out.println("hint: to install a new server use -i");
             System.out.println();
 
+            // TODO: also appropriate the space before the (-argument)'s
             int maxSpace = 0;
             for (Map.Entry<String, String> definition : argumentDefinitions.entrySet())
                 if (maxSpace < definition.getKey().length()) maxSpace = definition.getKey().length();
