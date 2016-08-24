@@ -44,6 +44,9 @@ public class DownloadUtil {
         System.out.println(" done in " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
+    public static void ungzip(File source) {
+        ungzip(source, source.getParentFile());
+    }
     public static void ungzip(File source, File destination) {
         long startTime = System.currentTimeMillis();
         System.out.print("Ungzipping " + source.getName() + " to " + destination.getPath() + "...");
