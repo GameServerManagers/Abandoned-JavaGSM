@@ -37,13 +37,11 @@ public class UpdateManager {
             String latestUrl = "http://scarsz.tech:8080/job/JavaGSM/lastSuccessfulBuild/artifact/target/JavaGSM.jar";
             File destination = new File(JavaGSM.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
             DownloadUtil.download("http://scarsz.tech:8080/job/UpdateManager/lastSuccessfulBuild/artifact/target/UpdateManager.jar");
-            Runtime.getRuntime().exec("java -jar JavaGSM.jar \"" + latestUrl + "\" \"" + destination.getAbsolutePath() + "\"");
+            RuntimeUtil.runProcess("java -jar JavaGSM.jar \"" + latestUrl + "\" \"" + destination.getAbsolutePath() + "\"");
             System.exit(0);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             System.out.println("You're one lucky little shit cause this error is never suppose to happen");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

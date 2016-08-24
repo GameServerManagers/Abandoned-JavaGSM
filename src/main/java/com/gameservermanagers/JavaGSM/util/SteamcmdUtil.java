@@ -50,11 +50,15 @@ public class SteamcmdUtil {
             SteamcmdUtil.check();
             System.out.println("\nInstalling app " + app + " to " + destination + "...");
 
-            Process steamcmdProcess = Runtime.getRuntime().exec("steamcmd/" + steamcmdExecutable + " " + steamcmdCommand
+            Process steamcmdProcess = RuntimeUtil.runProcess("steamcmd/" + steamcmdExecutable + " " + steamcmdCommand
                     .replace("{LOGIN}", login)
                     .replace("{DESTINATION}", destination.getAbsolutePath())
                     .replace("{APP}", app))
             ;
+            if (steamcmdProcess == null) {
+                System.out.println("An error occurred during starting SteamCMD, aborting");
+                return false;
+            }
 
             StreamGobbler errorGobbler = new StreamGobbler(steamcmdProcess.getErrorStream());
             StreamGobbler outputGobbler = new StreamGobbler(steamcmdProcess.getInputStream());
@@ -78,7 +82,7 @@ public class SteamcmdUtil {
                 System.out.println(" none found");
                 return true;
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
             return false;
         }
