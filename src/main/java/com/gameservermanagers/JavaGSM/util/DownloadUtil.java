@@ -69,7 +69,7 @@ public class DownloadUtil {
         System.out.print("Cloning " + uri + " into " + destination + "...");
         long startTime = System.currentTimeMillis();
         try { Git.cloneRepository().setURI(uri).setDirectory(destination).call(); } catch (GitAPIException e) { e.printStackTrace(); }
-        System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + destination.length()/1024L/1024L + "MB");
+        System.out.println(" done in " + ((System.currentTimeMillis() - startTime)/1000L) + " seconds; " + FileUtils.sizeOfDirectory(destination)/1024L/1024L + "MB");
     }
 
     public static void moveAllChildrenOfFolderToParent(File target) {
