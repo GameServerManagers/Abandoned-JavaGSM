@@ -65,9 +65,8 @@ public class Minecraft {
 
         // generate non-gsm scripts
         System.out.print("Creating non-GSM scripts...");
-        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
         try {
-            if (isWindows) {
+            if (JavaGSM.isWindows) {
                 FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
             } else {
                 FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
@@ -80,7 +79,7 @@ public class Minecraft {
         System.out.println();
 
         try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), JavaGSM.gson.toJson(ServerConfig.minecraft(memory, jarFile)), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
-        System.out.println("Finished installing server. Start it with " + new File(destination, "/Start-NoGSM." + (isWindows ? "bat" : "sh")));
+        System.out.println("Finished installing server. Start it with " + new File(destination, "/Start-NoGSM." + (JavaGSM.isWindows ? "bat" : "sh")));
     }
 
     public static String install_Vanilla(File destination) {

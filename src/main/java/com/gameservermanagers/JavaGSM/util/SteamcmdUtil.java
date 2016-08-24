@@ -1,5 +1,7 @@
 package com.gameservermanagers.JavaGSM.util;
 
+import com.gameservermanagers.JavaGSM.JavaGSM;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -12,12 +14,8 @@ public class SteamcmdUtil {
         put("Invalid platform", "This server does not support this OS; nothing we can do about it.");
     }};
 
-    private static boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
-    private static boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
-    private static boolean isLinux = !isWindows && !isMac;
-
-    private static String steamcmdArchive = "steamcmd" + (isWindows ? ".zip" : isMac ? "_osx.tar.gz" : "_linux.tar.gz");
-    private static String steamcmdExtension = isWindows ? ".exe" : ".sh";
+    private static String steamcmdArchive = "steamcmd" + (JavaGSM.isWindows ? ".zip" : JavaGSM.isMac ? "_osx.tar.gz" : "_linux.tar.gz");
+    private static String steamcmdExtension = JavaGSM.isWindows ? ".exe" : ".sh";
     private static String steamcmdExecutable = "steamcmd" + steamcmdExtension;
     private static String steamcmdCommand = "+login {LOGIN} +force_install_dir {DESTINATION} +app_update {APP} validate +exit";
     private static String steamcmdUrl = "https://steamcdn-a.akamaihd.net/client/installer/" + steamcmdArchive;

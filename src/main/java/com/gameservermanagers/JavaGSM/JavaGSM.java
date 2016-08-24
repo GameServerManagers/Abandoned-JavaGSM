@@ -27,6 +27,10 @@ public class JavaGSM {
         put("-u (-update)", "Update an existing server");
     }};
 
+    public static boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
+    public static boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
+    public static boolean isLinux = !isWindows && !isMac;
+
     public static Gson gson = new Gson();
 
     public static void main(String[] args) {
