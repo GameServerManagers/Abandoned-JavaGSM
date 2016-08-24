@@ -12,7 +12,16 @@ public class RuntimeUtil {
     public static Process runProcess(String command, File directory) {
         try {
             System.out.println("Running command \"" + command + "\"");
-            return Runtime.getRuntime().exec(command, null, directory);
+            Process p = Runtime.getRuntime().exec(command, null, directory);
+
+            if (p != null) {
+                StreamGobbler outputGobbler = new StreamGobbler(p.getInputStream());
+                outputGobbler.start();
+                StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream());
+                errorGobbler.start();
+            }
+
+            return p;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
