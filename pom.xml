@@ -54,6 +54,18 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <!-- do NOT include manifest signatures -->
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+
                     <!--  utterly useless artifact from shade 2.x  -->
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
@@ -62,11 +74,15 @@
     </build>
 
     <dependencies>
+
+        <!-- jSoup (very nice HTTP library) -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>RELEASE</version>
         </dependency>
+
+        <!-- Apache Commons (super nice i/o stuff) -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -77,16 +93,22 @@
             <artifactId>commons-lang</artifactId>
             <version>RELEASE</version>
         </dependency>
+
+        <!-- Reflections (getting all classes in servers package) -->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>RELEASE</version>
         </dependency>
+
+        <!-- Gson (JSON parser) -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>RELEASE</version>
         </dependency>
+
+        <!-- extraction libraries -->
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
@@ -97,6 +119,19 @@
             <artifactId>jarchivelib</artifactId>
             <version>RELEASE</version>
         </dependency>
+
+        <!-- jGit -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
     </dependencies>
 
 </project>
