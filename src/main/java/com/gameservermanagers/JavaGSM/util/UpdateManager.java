@@ -40,8 +40,8 @@ public class UpdateManager {
             RuntimeUtil.runProcess("java -jar JavaGSM.jar \"" + latestUrl + "\" \"" + destination.getAbsolutePath() + "\"");
             System.exit(0);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
             System.out.println("You're one lucky little shit cause this error is never suppose to happen");
+            e.printStackTrace();
         }
     }
 

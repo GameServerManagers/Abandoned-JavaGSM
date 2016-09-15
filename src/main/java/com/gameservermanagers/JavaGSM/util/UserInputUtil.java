@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class UserInput {
+public class UserInputUtil {
 
     public static boolean questionYesNo(String message) {
         String response = "";

@@ -1,7 +1,7 @@
 package com.gameservermanagers.JavaGSM;
 
 import com.gameservermanagers.JavaGSM.util.UpdateManager;
-import com.gameservermanagers.JavaGSM.util.UserInput;
+import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import com.google.gson.Gson;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -35,7 +35,9 @@ public class JavaGSM {
 
     public static void main(String[] args) {
         // TODO: better header
-        System.out.println("JavaGSM v" + version + " @ScarszRawr\n");
+        System.out.println("JavaGSM v" + version + " dev @ScarszRawr & collective GameServerManagers team");
+        System.out.println("https://github.com/GameServerManagers/JavaGSM");
+        System.out.println();
 
         // TODO: make this periodic
         UpdateManager.checkForUpdates();
@@ -72,10 +74,10 @@ public class JavaGSM {
                     System.out.println();
 
                     try {
-                        // TODO: check if server destination is already taken
                         new File("servers").mkdir();
                         Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
-                        File destination = new File("servers/" + UserInput.questionString("What should the server's main directory be in ./servers/", false));
+                        File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/", false));
+                        // TODO: check if server destination is already taken
                         destination.mkdir();
                         System.out.println();
                         installer.invoke(null, destination);
@@ -105,7 +107,7 @@ public class JavaGSM {
             choices.add(actualName);
         });
         Collections.sort(choices);
-        return choices.get(UserInput.questionList("Which server do you want to install", choices));
+        return choices.get(UserInputUtil.questionList("Which server do you want to install", choices));
     }
 
 }

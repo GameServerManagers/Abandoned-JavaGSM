@@ -3,8 +3,10 @@ package com.gameservermanagers.JavaGSM.util;
 import com.gameservermanagers.JavaGSM.JavaGSM;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
@@ -64,7 +66,10 @@ public class SteamcmdUtil {
             StreamGobbler outputGobbler = new StreamGobbler(steamcmdProcess.getInputStream());
             errorGobbler.start();
             outputGobbler.start();
+
             steamcmdProcess.waitFor();
+            outputGobbler.join();
+            errorGobbler.join();
 
             System.out.println("Steam finished with exit code " + steamcmdProcess.exitValue() + "\n");
             

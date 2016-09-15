@@ -3,7 +3,7 @@ package com.gameservermanagers.JavaGSM.servers;
 import com.gameservermanagers.JavaGSM.JavaGSM;
 import com.gameservermanagers.JavaGSM.util.DownloadUtil;
 import com.gameservermanagers.JavaGSM.util.ServerConfig;
-import com.gameservermanagers.JavaGSM.util.UserInput;
+import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 
@@ -38,7 +38,7 @@ public class Minecraft {
         for (Method method : Minecraft.class.getDeclaredMethods())
             if (method.getName().startsWith("install_")) availableServerSoftware.add(method.getName().substring(8));
 
-        String requestedSoftware = availableServerSoftware.get(UserInput.questionList("Which server software do you want to install", availableServerSoftware));
+        String requestedSoftware = availableServerSoftware.get(UserInputUtil.questionList("Which server software do you want to install", availableServerSoftware));
         System.out.println("Installing " + requestedSoftware + "...\n");
 
         // run installer for that specific software
@@ -57,10 +57,10 @@ public class Minecraft {
         }
 
         // ask how much memory should be max for this server
-        String memory = UserInput.questionString("How much memory should be this server use (ex. 1G, 512M)", false).toUpperCase();
+        String memory = UserInputUtil.questionString("How much memory should be this server use (ex. 1G, 512M)", false).toUpperCase();
 
         // write user's input to eula acceptance to file
-        boolean userAgreesToEula = UserInput.questionYesNo("Do you agree to follow the Minecraft EULA");
+        boolean userAgreesToEula = UserInputUtil.questionYesNo("Do you agree to follow the Minecraft EULA");
         try { FileUtils.writeStringToFile(new File(destination, "eula.txt"), "eula=" + userAgreesToEula, Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
 
         // generate non-gsm scripts
