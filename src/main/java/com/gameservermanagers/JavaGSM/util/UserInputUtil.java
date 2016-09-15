@@ -28,12 +28,12 @@ public class UserInputUtil {
         }
     }
 
-    public static String questionString(String message, boolean nothingIsOkay) {
+    public static String questionString(String message, boolean blankResponseIsOkay) {
         while (true) {
             System.out.print(message + "? (string) ");
             String response = System.console().readLine();
 
-            if (nothingIsOkay) {
+            if (blankResponseIsOkay) {
                 return response;
             } else {
                 if (!response.replace(" ", "").isEmpty()) return response;
