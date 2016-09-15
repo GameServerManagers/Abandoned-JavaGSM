@@ -104,6 +104,7 @@ public class JavaGSM {
             String actualName = actualNameArray[actualNameArray.length - 1];
             choices.add(actualName);
         });
+        Collections.sort(choices);
         return choices.get(UserInput.questionList("Which server do you want to install", choices));
     }
 
