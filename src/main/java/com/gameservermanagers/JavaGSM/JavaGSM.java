@@ -1,5 +1,6 @@
 package com.gameservermanagers.JavaGSM;
 
+import com.gameservermanagers.JavaGSM.util.SleepUtil;
 import com.gameservermanagers.JavaGSM.util.UpdateManager;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import com.google.gson.Gson;
@@ -74,11 +75,23 @@ public class JavaGSM {
                     System.out.println();
 
                     try {
-                        new File("servers").mkdir();
+                        boolean serversFolderAvailable = new File("servers").exists() || new File("servers").mkdir();
+                        if (!serversFolderAvailable) {
+                            System.out.print("An error occurred creating the servers directory, aborting installation");
+                            SleepUtil.printlnEllipsis();
+                            continue;
+                        }
+
                         Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
                         File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/"));
-                        // TODO: check if server destination is already taken
-                        destination.mkdir();
+
+                        boolean destinationFolderAvailable = !destination.exists() && destination.mkdir();
+                        if (!destinationFolderAvailable) {
+                            System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ", aborting installation");
+                            SleepUtil.printlnEllipsis();
+                            continue;
+                        }
+
                         System.out.println();
                         installer.invoke(null, destination);
                     } catch (ClassNotFoundException e) {
