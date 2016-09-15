@@ -76,7 +76,7 @@ public class JavaGSM {
                     try {
                         new File("servers").mkdir();
                         Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
-                        File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/", false));
+                        File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/"));
                         // TODO: check if server destination is already taken
                         destination.mkdir();
                         System.out.println();
