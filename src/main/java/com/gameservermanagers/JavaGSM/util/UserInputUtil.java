@@ -28,6 +28,7 @@ public class UserInputUtil {
         }
     }
 
+    public static String questionString(String message) { return questionString(message, false); }
     public static String questionString(String message, boolean blankResponseIsOkay) {
         while (true) {
             System.out.print(message + "? (string) ");
