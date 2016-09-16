@@ -66,11 +66,12 @@ public class Minecraft {
         // generate non-gsm scripts
         System.out.print("Creating non-GSM scripts...");
         try {
+            File file = new File(destination, "Start-NoGSM." + (JavaGSM.isWindows ? "bat" : ".sh"));
             if (JavaGSM.isWindows) {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.bat"), "@echo off\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
+                FileUtils.writeStringToFile(file, "@echo off\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
             } else {
-                FileUtils.writeStringToFile(new File(destination, "Start-NoGSM.sh"), "#!/bin/bash\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
-                new File(destination, "Start-NoGSM.sh").setExecutable(true);
+                FileUtils.writeStringToFile(file, "#!/bin/bash\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
+                if (!file.setExecutable(true)) System.out.println("Failed setting " + file.getAbsolutePath() + " to be executable. Do this with \"chmod +x " + file.getAbsolutePath() + "\"");
             }
         } catch (IOException e) {
             e.printStackTrace();
