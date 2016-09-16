@@ -34,7 +34,7 @@ public class SteamcmdUtil {
 
         System.out.println(" " + (validSteamcmd ? "installed" : "not installed"));
 
-        return validSteamcmd || attemptInstall && installSteamcmd();
+        return validSteamcmd || (attemptInstall && installSteamcmd());
     }
 
     public static boolean installSteamcmd() {

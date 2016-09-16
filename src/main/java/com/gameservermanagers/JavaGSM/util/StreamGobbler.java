@@ -10,9 +10,9 @@ import java.util.List;
 public class StreamGobbler extends Thread {
 
     List<String> output = new LinkedList<>();
-    private boolean done = false;
+    boolean done = false;
+    InputStream is;
 
-    private InputStream is;
     public StreamGobbler(InputStream is) {
         this.is = is;
     }
