@@ -19,7 +19,7 @@ public class UserInputUtil {
 
     public static int questionInt(String message) {
         for (;;) {
-            System.out.print(message + "? (num) ");
+            System.out.print(message + "? (int) ");
             String response = System.console().readLine();
 
             try {
