@@ -10,8 +10,6 @@ public class AceOfSpades {
 
     public static void install(File destination) {
         if (JavaGSM.isWindows) {
-            // windows install
-
             // download pre-compiled binaries and stuff
             DownloadUtil.download("https://github.com/NateShoffner/PySnip/releases/download/f8808c5/pysnip-feature_server-0.75.zip");
             DownloadUtil.unzip(new File("pysnip-feature_server-0.75.zip"), destination);
@@ -19,8 +17,6 @@ public class AceOfSpades {
             DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "dist"));
             System.out.println();
         } else {
-            // os x/linux install
-
             // clone repo
             DownloadUtil.clone("https://github.com/NateShoffner/PySnip", destination);
             // install python dependencies
