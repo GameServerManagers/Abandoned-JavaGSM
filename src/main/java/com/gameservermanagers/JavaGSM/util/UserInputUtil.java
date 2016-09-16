@@ -18,7 +18,7 @@ public class UserInputUtil {
     }
 
     public static int questionInt(String message) {
-        while (true) {
+        for (;;) {
             System.out.print(message + "? (num) ");
             String response = System.console().readLine();
 
@@ -30,7 +30,7 @@ public class UserInputUtil {
 
     public static String questionString(String message) { return questionString(message, false); }
     public static String questionString(String message, boolean blankResponseIsOkay) {
-        while (true) {
+        for (;;) {
             System.out.print(message + "? (string) ");
             String response = System.console().readLine();
 
