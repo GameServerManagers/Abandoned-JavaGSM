@@ -2,9 +2,9 @@
 This is a repo under development to create a cross-platform game server manager suite. Java was picked because it supports all platforms out of the box and is a personal favorite of Scarsz.
 
 # Usage
-JavaGSM obviously requires Java, minimum Java 8. Look up instructions how to do this with your distro if you don't already know.
+JavaGSM obviously requires Java, minimum Java 7. Java 7 is standard on all modern distros, you should be good to go from the get-go.
 
-**Windows**: Download the latest build at http://scarsz.tech:8080/job/JavaGSM/lastSuccessfulBuild/artifact/target/JavaGSM.jar and run it from cmd via `java -jar JavaGSM.jar`
+**Windows**: Download the latest build at http://scarsz.tech:8080/job/JavaGSM/lastSuccessfulBuild/artifact/target/JavaGSM.jar and run it from `cmd` via `java -jar JavaGSM.jar`
 
 **Linux & OS X**: Run `curl -o JavaGSM.jar http://scarsz.tech:8080/job/JavaGSM/lastSuccessfulBuild/artifact/target/JavaGSM.jar; chmod +x JavaGSM.jar`. You can now run JavaGSM from `./JavaGSM.jar`.
 
