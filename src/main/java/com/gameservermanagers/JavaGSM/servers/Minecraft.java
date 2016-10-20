@@ -1,6 +1,7 @@
 package com.gameservermanagers.JavaGSM.servers;
 
 import com.gameservermanagers.JavaGSM.JavaGSM;
+import com.gameservermanagers.JavaGSM.ServerInstaller;
 import com.gameservermanagers.JavaGSM.util.DownloadUtil;
 import com.gameservermanagers.JavaGSM.util.ServerConfig;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
@@ -16,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class Minecraft {
+public class Minecraft implements ServerInstaller {
 
     // TODO: add more stuff to default command line
 

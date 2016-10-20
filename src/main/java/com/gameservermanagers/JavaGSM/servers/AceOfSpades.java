@@ -1,12 +1,13 @@
 package com.gameservermanagers.JavaGSM.servers;
 
 import com.gameservermanagers.JavaGSM.JavaGSM;
+import com.gameservermanagers.JavaGSM.ServerInstaller;
 import com.gameservermanagers.JavaGSM.util.DownloadUtil;
 import com.gameservermanagers.JavaGSM.util.RuntimeUtil;
 
 import java.io.File;
 
-public class AceOfSpades {
+public class AceOfSpades implements ServerInstaller {
 
     public static void install(File destination) {
         if (JavaGSM.isWindows) {

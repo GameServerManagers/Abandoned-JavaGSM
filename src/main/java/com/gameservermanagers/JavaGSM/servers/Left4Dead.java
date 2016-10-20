@@ -1,11 +1,12 @@
 package com.gameservermanagers.JavaGSM.servers;
 
+import com.gameservermanagers.JavaGSM.ServerInstaller;
 import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 
 import java.io.File;
 
 @SuppressWarnings("unused")
-public class Left4Dead {
+public class Left4Dead implements ServerInstaller {
 
     public static void install(File destination) {
         boolean installedSuccessfully = SteamcmdUtil.installApp("anonymous", destination, "510");

@@ -21,11 +21,11 @@ public class JavaGSM {
 
     public static final String version = "0.1.0";
     public static final Map<String, String> argumentDefinitions = new LinkedHashMap<String, String>() {{
-        put("-c (-configure)", "Configure GSM or an existing server");
-        put("-i (-install)", "Install a new server");
-        put("-s (-start)", "Start a non-running existing server");
+        put("-c  (-configure)", "Configure GSM or an existing server");
+        put("-i  (-install)", "Install a new server");
+        put("-s  (-start)", "Start a non-running existing server");
         put("-st (-stop)", "Stop a running existing server");
-        put("-u (-update)", "Update an existing server");
+        put("-u  (-update)", "Update an existing server");
     }};
 
     public static boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
