@@ -94,7 +94,9 @@ public class SteamcmdUtil {
     }
 
     public static List<String> scanForErrors(List<String> output) {
-        return output.stream().filter(s -> s.startsWith("ERROR!")).collect(Collectors.toCollection(LinkedList::new));
+        List<String> errors = new LinkedList<>();
+        for (String s : output) if (s.startsWith("ERROR!")) errors.add(s);
+        return errors;
     }
 
     public static String getResolutionForError(String error) {

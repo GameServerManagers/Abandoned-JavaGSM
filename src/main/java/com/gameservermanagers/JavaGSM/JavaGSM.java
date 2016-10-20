@@ -114,11 +114,11 @@ public class JavaGSM {
         Set<Class<?>> availableServerClasses = reflections.getSubTypesOf(Object.class);
 
         List<String> choices = new LinkedList<>();
-        availableServerClasses.forEach(serverClass -> {
+        for (Class<?> serverClass : availableServerClasses) {
             String[] actualNameArray = serverClass.getName().split("\\.");
             String actualName = actualNameArray[actualNameArray.length - 1];
             choices.add(actualName);
-        });
+        }
         Collections.sort(choices);
         return choices.get(UserInputUtil.questionList("Which server do you want to install", choices));
     }
