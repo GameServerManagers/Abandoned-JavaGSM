@@ -68,38 +68,7 @@ public class JavaGSM {
             switch (args[i]) {
                 case "-i":
                 case "-install":
-                    String gameServerName;
-                    if (args.length > i + 1 && !args[i + 1].startsWith("-")) gameServerName = args[i + 1];
-                    else { gameServerName = install_GetGame(); }
-                    System.out.println("Installing " + gameServerName + " server...");
-                    System.out.println();
-
-                    try {
-                        boolean serversFolderAvailable = new File("servers").exists() || new File("servers").mkdir();
-                        if (!serversFolderAvailable) {
-                            System.out.print("An error occurred creating the servers directory, aborting installation");
-                            SleepUtil.printlnEllipsis();
-                            continue;
-                        }
-
-                        Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
-                        File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/"));
-
-                        boolean destinationFolderAvailable = !destination.exists() && destination.mkdir();
-                        if (!destinationFolderAvailable) {
-                            System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ", aborting installation");
-                            SleepUtil.printlnEllipsis();
-                            continue;
-                        }
-
-                        System.out.println();
-                        installer.invoke(null, destination);
-                    } catch (ClassNotFoundException e) {
-                        System.out.println("Invalid server \"" + gameServerName + "\"");
-                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                        System.out.println("This should have never happened. Shit the bed. Tell the developers about this one, cause it's huge.");
-                        e.printStackTrace();
-                    }
+                    install(args, i);
                     break;
                 default:
                     System.out.println("Unknown argument \"" + args[i] + "\"");
@@ -108,6 +77,45 @@ public class JavaGSM {
         }
     }
 
+    private static void install(String[] args, int i) {
+        String gameServerName;
+        if (args.length > i + 1 && !args[i + 1].startsWith("-")) gameServerName = args[i + 1];
+        else { gameServerName = install_GetGame(); }
+        System.out.println("Installing " + gameServerName + " server...");
+        System.out.println();
+
+        try {
+            boolean serversFolderAvailable = new File("servers").exists() || new File("servers").mkdir();
+            if (!serversFolderAvailable) {
+                System.out.print("An error occurred creating the servers directory, aborting installation");
+                SleepUtil.printlnEllipsis();
+                return;
+            }
+
+            Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
+            File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/"));
+
+            if (!destination.exists()) {
+                System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ": directory already exists. Aborting installation");
+                SleepUtil.printlnEllipsis();
+                return;
+            }
+            if (!destination.mkdir()) {
+                System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ": could not create directory. Aborting installation");
+                SleepUtil.printlnEllipsis();
+                return;
+            }
+
+            System.out.println();
+            installer.invoke(null, destination);
+        } catch (ClassNotFoundException e) {
+            System.out.println("Invalid server \"" + gameServerName + "\"");
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+            System.out.print("This should have never happened. Shit the bed. Tell the developers about this one, cause it's huge.");
+            SleepUtil.printlnEllipsis();
+        }
+    }
     private static String install_GetGame() {
         // don't attempt to understand this
         Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new SubTypesScanner(false), new ResourcesScanner()).setUrls(ClasspathHelper.forClassLoader(Arrays.asList(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader()).toArray(new ClassLoader[0]))).filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.gameservermanagers.JavaGSM.servers"))));
