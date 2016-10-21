@@ -4,6 +4,7 @@ import com.gameservermanagers.JavaGSM.util.SleepUtil;
 import com.gameservermanagers.JavaGSM.util.UpdateManager;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -33,7 +34,7 @@ public class JavaGSM {
     public static boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
     public static boolean isLinux = !isWindows && !isMac;
 
-    public static Gson gson = new Gson();
+    public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void main(String[] args) {
         // TODO: better header
