@@ -3,7 +3,7 @@ package com.gameservermanagers.JavaGSM.servers;
 import com.gameservermanagers.JavaGSM.JavaGSM;
 import com.gameservermanagers.JavaGSM.ServerInstaller;
 import com.gameservermanagers.JavaGSM.util.DownloadUtil;
-import com.gameservermanagers.JavaGSM.util.ServerConfig;
+import com.gameservermanagers.JavaGSM.util.ConfigUtil;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -69,9 +69,9 @@ public class Minecraft implements ServerInstaller {
         try {
             File file = new File(destination, "Start-NoGSM." + (JavaGSM.isWindows ? "bat" : ".sh"));
             if (JavaGSM.isWindows) {
-                FileUtils.writeStringToFile(file, "@echo off\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
+                FileUtils.writeStringToFile(file, "@echo off\ncd " + destination.getAbsolutePath() + "\n" + ConfigUtil.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
             } else {
-                FileUtils.writeStringToFile(file, "#!/bin/bash\ncd " + destination.getAbsolutePath() + "\n" + ServerConfig.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
+                FileUtils.writeStringToFile(file, "#!/bin/bash\ncd " + destination.getAbsolutePath() + "\n" + ConfigUtil.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
                 if (!file.setExecutable(true)) System.out.println("Failed setting " + file.getAbsolutePath() + " to be executable. Do this with \"chmod +x " + file.getAbsolutePath() + "\"");
             }
         } catch (IOException e) {
@@ -80,7 +80,7 @@ public class Minecraft implements ServerInstaller {
         System.out.println(" done");
         System.out.println();
 
-        try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), JavaGSM.gson.toJson(ServerConfig.minecraft(memory, jarFile)), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
+        try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), JavaGSM.gson.toJson(ConfigUtil.minecraft(memory, jarFile)), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
         System.out.println("Finished installing server. Start it with " + new File(destination, "/Start-NoGSM." + (JavaGSM.isWindows ? "bat" : "sh")));
     }
 

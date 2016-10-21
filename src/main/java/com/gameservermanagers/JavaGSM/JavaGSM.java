@@ -1,10 +1,13 @@
 package com.gameservermanagers.JavaGSM;
 
+import com.gameservermanagers.JavaGSM.util.ResourceUtil;
 import com.gameservermanagers.JavaGSM.util.SleepUtil;
 import com.gameservermanagers.JavaGSM.util.UpdateManager;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
+import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -14,11 +17,13 @@ import org.reflections.util.FilterBuilder;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.*;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unchecked"})
 public class JavaGSM {
 
     public static final String version = "0.1.0";
@@ -30,17 +35,22 @@ public class JavaGSM {
         put("-u  (-update)", "Update an existing server");
     }};
 
-    public static boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
-    public static boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
-    public static boolean isLinux = !isWindows && !isMac;
+    public static final boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
+    public static final boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
+    public static final boolean isLinux = !isWindows && !isMac;
 
-    public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Map<String, Object> config = new HashMap<>();
+    public static final File configFile = new File("gsm.json");
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void main(String[] args) {
         // TODO: better header
         System.out.println("JavaGSM v" + version + " dev @ScarszRawr & collective GameServerManagers team");
         System.out.println("https://github.com/GameServerManagers/JavaGSM");
         System.out.println();
+
+        System.out.println("Loading config...");
+        loadConfig();
 
         // TODO: make this periodic
         UpdateManager.checkForUpdates();
@@ -130,6 +140,11 @@ public class JavaGSM {
             SleepUtil.printlnEllipsis();
         }
     }
+
+    /**
+     * Get the name of a user-supplied game server class name to install
+     * @return the name of the server class name
+     */
     private static String install_GetGame() {
         // don't attempt to understand this
         Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new SubTypesScanner(false), new ResourcesScanner()).setUrls(ClasspathHelper.forClassLoader(Arrays.asList(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader()).toArray(new ClassLoader[0]))).filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.gameservermanagers.JavaGSM.servers"))));
@@ -148,5 +163,18 @@ public class JavaGSM {
     private static void start(@Nullable String argument) {
 
     }
+
+    //region Utilities
+    private static void loadConfig() {
+        if (!configFile.exists()) ResourceUtil.copyResourceToFile("gsm-default.json", configFile);
+        try {
+            config.clear();
+            for (Map.Entry<String, Object> configOption : ((LinkedTreeMap<String, Object>) gson.fromJson(FileUtils.readFileToString(configFile, Charset.defaultCharset()), LinkedTreeMap.class)).entrySet())
+                config.put(configOption.getKey(), configOption.getValue());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
 
 }
