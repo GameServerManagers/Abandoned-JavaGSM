@@ -42,7 +42,7 @@ public class SteamcmdUtil {
 
         DownloadUtil.download(steamcmdUrl);
         DownloadUtil.unzip(new File(steamcmdArchive), new File("steamcmd"));
-        new File(steamcmdArchive).delete();
+        if (!new File(steamcmdArchive).delete()) System.out.println("Failed deleting the already extracted SteamCMD archive, moving on...");
 
         return check(false);
     }

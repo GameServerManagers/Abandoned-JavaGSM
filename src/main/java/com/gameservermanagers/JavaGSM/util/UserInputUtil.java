@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class UserInputUtil {
 
     public static boolean questionYesNo(String message) {

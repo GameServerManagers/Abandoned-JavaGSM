@@ -11,6 +11,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -65,22 +66,34 @@ public class JavaGSM {
 
         for (int i = 0; i < args.length; i++) {
             if (!args[i].startsWith("-")) continue;
+
+            String argument = null;
+            if (args.length > i + 1 && !args[i + 1].startsWith("-")) argument = args[i + 1];
+
             switch (args[i]) {
                 case "-i":
                 case "-install":
-                    install(args, i);
+                    install(argument);
+                    break;
+                case "-s":
+                case "-start":
+                    start(argument);
                     break;
                 default:
-                    System.out.println("Unknown argument \"" + args[i] + "\"");
+                    System.out.println("Unknown flag \"" + args[i] + (argument == null ? "" : " " + argument) + "\"");
                     break;
             }
         }
     }
 
-    private static void install(String[] args, int i) {
+    /**
+     * Install the specified server. If a null argument is given, the user will be prompted for the game to install.
+     * @param argument The server class name to install
+     */
+    private static void install(@Nullable String argument) {
         String gameServerName;
-        if (args.length > i + 1 && !args[i + 1].startsWith("-")) gameServerName = args[i + 1];
-        else { gameServerName = install_GetGame(); }
+        if (argument != null && argument.length() > 0) gameServerName = argument; else gameServerName = install_GetGame();
+
         System.out.println("Installing " + gameServerName + " server...");
         System.out.println();
 
@@ -95,7 +108,7 @@ public class JavaGSM {
             Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
             File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/"));
 
-            if (!destination.exists()) {
+            if (destination.exists()) {
                 System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ": directory already exists. Aborting installation");
                 SleepUtil.printlnEllipsis();
                 return;
@@ -129,6 +142,10 @@ public class JavaGSM {
         }
         Collections.sort(choices);
         return choices.get(UserInputUtil.questionList("Which server do you want to install", choices));
+    }
+
+    private static void start(@Nullable String argument) {
+
     }
 
 }
