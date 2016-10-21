@@ -64,23 +64,7 @@ public class Minecraft implements ServerInstaller {
         boolean userAgreesToEula = UserInputUtil.questionYesNo("Do you agree to follow the Minecraft EULA");
         try { FileUtils.writeStringToFile(new File(destination, "eula.txt"), "eula=" + userAgreesToEula, Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
 
-        // generate non-gsm scripts
-        System.out.print("Creating non-GSM scripts...");
-        try {
-            File file = new File(destination, "Start-NoGSM." + (JavaGSM.isWindows ? "bat" : ".sh"));
-            if (JavaGSM.isWindows) {
-                FileUtils.writeStringToFile(file, "@echo off\ncd " + destination.getAbsolutePath() + "\n" + ConfigUtil.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
-            } else {
-                FileUtils.writeStringToFile(file, "#!/bin/bash\ncd " + destination.getAbsolutePath() + "\n" + ConfigUtil.minecraft(memory, jarFile).getCommandLine(), Charset.defaultCharset());
-                if (!file.setExecutable(true)) System.out.println("Failed setting " + file.getAbsolutePath() + " to be executable. Do this with \"chmod +x " + file.getAbsolutePath() + "\"");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(" done");
-        System.out.println();
-
-        try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), JavaGSM.gson.toJson(ConfigUtil.minecraft(memory, jarFile)), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
+        try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), ConfigUtil.getDefaultConfigAsJson(Minecraft.class).replace("{MEMORY}", memory).replace("{JARFILE}", jarFile), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
         System.out.println("Finished installing server. Start it with " + new File(destination, "/Start-NoGSM." + (JavaGSM.isWindows ? "bat" : "sh")));
     }
 

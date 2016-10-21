@@ -1,6 +1,7 @@
 package com.gameservermanagers.JavaGSM.util;
 
 import com.gameservermanagers.JavaGSM.JavaGSM;
+import com.gameservermanagers.JavaGSM.servers.Minecraft;
 import com.google.gson.internal.LinkedTreeMap;
 import org.apache.commons.io.FileUtils;
 
@@ -9,12 +10,15 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
 public class ConfigUtil {
 
-    public static Map<String, String> defaultCommandLines = new HashMap<String, String>(){{
-        put("minecraft", "java -Xmx{MEMORY} -jar {JARFILE} nogui");
+    public static Map<Class<?>, HashMap<String, Object>> defaultCommandLines = new HashMap<Class<?>, HashMap<String, Object>>(){{
+        put(Minecraft.class, new HashMap<String, Object>(){{
+            put("commandline", "java -Xmx{MEMORY} -jar {JARFILE} nogui");
+        }});
     }};
 
     public static void changeConfigOptionInFile(File file, String key, Object value) {
@@ -25,12 +29,22 @@ public class ConfigUtil {
             e.printStackTrace();
         }
     }
-    public static void writeConfigToFile() {
-
+    public static LinkedTreeMap<String, Object> getDefaultConfig(Class<?> serverInstallerClass) {
+        LinkedTreeMap<String, Object> config = JavaGSM.gson.fromJson(ResourceUtil.getResourceAsString("gsm-server-default.json"), LinkedTreeMap.class);
+        for (Map.Entry<String, Object> entry : ((Set<Map.Entry<String, Object>>) JavaGSM.gson.fromJson(ResourceUtil.getResourceAsString(serverInstallerClass.getClass().getName()), HashMap.class).entrySet())) {
+            config.put(entry.getKey(), entry.getValue());
+        }
+        return config;
     }
-
-    public static File minecraft(String memory, String jarFile) {
-        return null;
+    public static String getDefaultConfigAsJson(Class<?> serverInstallerClass) {
+        return JavaGSM.gson.toJson(getDefaultConfig(serverInstallerClass));
+    }
+    public static void writeConfigToFile(HashMap<String, Object> config, File output) {
+        try {
+            FileUtils.writeStringToFile(output, JavaGSM.gson.toJson(config), Charset.defaultCharset());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
