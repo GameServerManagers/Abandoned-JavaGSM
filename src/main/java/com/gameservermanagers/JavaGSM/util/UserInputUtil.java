@@ -34,11 +34,8 @@ public class UserInputUtil {
             System.out.print(message + "? (string) ");
             String response = System.console().readLine();
 
-            if (blankResponseIsOkay) {
-                return response;
-            } else {
-                if (!response.replace(" ", "").isEmpty()) return response;
-            }
+            if (blankResponseIsOkay) return response;
+            if (!response.replace(" ", "").isEmpty()) return response;
         }
     }
 
