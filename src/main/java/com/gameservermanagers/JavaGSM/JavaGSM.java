@@ -52,11 +52,18 @@ public class JavaGSM {
         System.out.println("Loading config...");
         loadConfig();
         
-        DateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
+        DateFormat dateFormat = new SimpleDateFormat("dd MM yyyy");
         Date date = new Date();
-        //dateFormat.format(date)
-        UpdateManager.checkForUpdates();
-        System.out.println();
+        try {
+            long diff = dateFormat.format(date).getTime() - config.get("lastuc").getTime();
+            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
+                UpdateManager.checkForUpdates();
+                System.out.println();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        config.put("lastuc", dateFormat.format(date).getTime());
 
         if (args.length == 0) {
             System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
