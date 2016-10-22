@@ -223,7 +223,7 @@ public class JavaGSM {
      * @param argument The given server to start
      */
     private static void start(@Nullable String argument) {
-        // TODO:Make Start Command
+        // TODO
     }
 
     /**
@@ -231,7 +231,7 @@ public class JavaGSM {
      * @param argument The given server to stop
      */
     private static void stop(@Nullable String argument) {
-        // TODO:Make Stop Command
+        // TODO
     }
 
     /**
@@ -239,10 +239,11 @@ public class JavaGSM {
      * @param argument The given server to update
      */
     private static void update(@Nullable String argument) {
-        // TODO:Make Update Command
+        // TODO
     }
 
     //region Utilities
+    //region Config
     private static void loadConfig() {
         if (!configFile.exists()) ResourceUtil.copyResourceToFile("gsm-default.json", configFile);
 
@@ -266,6 +267,8 @@ public class JavaGSM {
             e.printStackTrace();
         }
     }
+    //endregion
+    // region Header
     private static void header() {
         // Looks weird due to escape characters, run to see actual ascii "Art"
         System.out.println ("       _                   _____  _____ __  __ ");
@@ -276,6 +279,7 @@ public class JavaGSM {
         System.out.println ("  \\____/ \\__,_| \\_/ \\__,_|\\_____|_____/|_|  |_|");
         System.out.println ("                                               ");
     }
+    //endregion
     //endregion
 
 }
