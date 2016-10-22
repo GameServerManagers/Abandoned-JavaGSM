@@ -2,7 +2,7 @@ package com.gameservermanagers.JavaGSM;
 
 import com.gameservermanagers.JavaGSM.util.ResourceUtil;
 import com.gameservermanagers.JavaGSM.util.SleepUtil;
-import com.gameservermanagers.JavaGSM.util.UpdateManager;
+import com.gameservermanagers.JavaGSM.util.UpdateUtil;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -125,7 +125,7 @@ public class JavaGSM {
      */
     private static void forceUpdate() {
         // check for updates
-        UpdateManager.checkForUpdates();
+        UpdateUtil.checkForUpdates();
         System.out.println();
 
         // save the current millis count to the config

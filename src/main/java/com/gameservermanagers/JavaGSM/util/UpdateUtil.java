@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class UpdateManager {
+public class UpdateUtil {
 
     public static void checkForUpdates() {
         System.out.print("Checking for updates...");
@@ -37,8 +37,8 @@ public class UpdateManager {
             RuntimeUtil.runProcess("java -jar JavaGSM.jar \"" + latestUrl + "\" \"" + destination.getAbsolutePath() + "\"");
             System.exit(0);
         } catch (URISyntaxException e) {
-            System.out.println("You're one lucky little shit cause this error is never suppose to happen");
             e.printStackTrace();
+            System.out.println("\"This will literally never happen\" they said. \"Don't even write a message for it,\" they said.");
         }
     }
 
