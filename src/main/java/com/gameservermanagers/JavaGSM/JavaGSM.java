@@ -1,6 +1,7 @@
 package com.gameservermanagers.JavaGSM;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,6 +37,8 @@ import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.stream.JsonWriter;
+import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil.ToStringAdapter;
 
 @SuppressWarnings({"WeakerAccess", "unchecked"})
 public class JavaGSM {
@@ -72,6 +75,7 @@ public class JavaGSM {
 		    System.out.println();
 		}
         config.put("lastuc", System.currentTimeMillis());
+        saveConfig();
 
         if (args.length == 0) {
             System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
@@ -215,6 +219,22 @@ public class JavaGSM {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private static void saveConfig() {
+    	if (!configFile.exists()) return;
+    	for (Map.Entry<String, Object> entry : config.entrySet()) {
+			//Store in config file
+    		try {
+    			JsonWriter writer = new JsonWriter(new FileWriter(configFile));
+    			writer.beginObject();
+    			writer.name(entry.getKey()).value(entry.getValue().toString());
+    			writer.endObject();
+    			writer.close();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+		}
     }
     //endregion
 
