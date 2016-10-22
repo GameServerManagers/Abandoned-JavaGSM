@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ConfigUtil {
 
     public static Map<Class<?>, HashMap<String, Object>> defaultCommandLines = new HashMap<Class<?>, HashMap<String, Object>>(){{
