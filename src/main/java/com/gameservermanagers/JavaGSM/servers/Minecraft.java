@@ -56,6 +56,44 @@ public class Minecraft implements ServerInstaller {
         System.out.println("Finished installing server. Start it with " + new File(destination, "/Start-NoGSM." + (JavaGSM.isWindows ? "bat" : "sh")));
     }
 
+    public static String install_CraftBukkit(File destination) {
+        // download spigot jar
+        String jarFile = "craftbukkit.jar";
+        String downloadUrl = "http://scarsz.tech:8080/job/CraftBukkit-Spigot/lastSuccessfulBuild/artifact/" + jarFile;
+        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
+
+        return jarFile;
+    }
+
+    public static String install_KCauldronUseThermosInstead(File destination) {
+        // find the latest version
+        System.out.print("Obtaining latest KCauldron build...");
+        String[] splitVersions = new String[0];
+        try { splitVersions = Jsoup.connect("https://api.prok.pw/repo/versions/pw.prok/KCauldron").ignoreContentType(true).get().html().split("version"); } catch (IOException e) { e.printStackTrace(); } // download latest versions JSON
+        String latestVersion = splitVersions[splitVersions.length - 1].substring(3).split("\"")[0]; // shitty JSON parsing, come @ me, square up homie
+        System.out.println(" " + latestVersion);
+
+        // download/extract/delete the latest bundle
+        String bundleFile = "KCauldron-" + latestVersion + "-bundle.zip";
+        String downloadUrl = "https://repo.prok.pw/pw/prok/KCauldron/" + latestVersion + "/" + bundleFile;
+        DownloadUtil.download(downloadUrl, new File(destination, bundleFile)); // download bundle
+        DownloadUtil.unzip(new File(destination, bundleFile)); // unzip downloaded zip
+        new File(destination, bundleFile).delete(); // delete extracted zip
+        new File(destination, "README.txt").delete(); // delete pointless readme
+
+        for (File file : destination.listFiles()) if (file.getAbsolutePath().endsWith(".jar")) return file.getName();
+        return "KCauldron.jar";
+    }
+
+    public static String install_Spigot(File destination) {
+        // download spigot jar
+        String jarFile = "spigot.jar";
+        String downloadUrl = "http://scarsz.tech:8080/job/CraftBukkit-Spigot/lastSuccessfulBuild/artifact/" + jarFile;
+        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
+
+        return jarFile;
+    }
+
     public static String install_Vanilla(File destination) {
         // find latest version
         System.out.print("Obtaining latest version info...");
@@ -92,44 +130,6 @@ public class Minecraft implements ServerInstaller {
         DownloadUtil.download(downloadUrl, new File(destination, jarFile));
 
         return jarFile;
-    }
-
-    public static String install_CraftBukkit(File destination) {
-        // download spigot jar
-        String jarFile = "craftbukkit.jar";
-        String downloadUrl = "http://scarsz.tech:8080/job/CraftBukkit-Spigot/lastSuccessfulBuild/artifact/" + jarFile;
-        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
-
-        return jarFile;
-    }
-
-    public static String install_Spigot(File destination) {
-        // download spigot jar
-        String jarFile = "spigot.jar";
-        String downloadUrl = "http://scarsz.tech:8080/job/CraftBukkit-Spigot/lastSuccessfulBuild/artifact/" + jarFile;
-        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
-
-        return jarFile;
-    }
-
-    public static String install_KCauldron(File destination) {
-        // find the latest version
-        System.out.print("Obtaining latest KCauldron build...");
-        String[] splitVersions = new String[0];
-        try { splitVersions = Jsoup.connect("https://api.prok.pw/repo/versions/pw.prok/KCauldron").ignoreContentType(true).get().html().split("version"); } catch (IOException e) { e.printStackTrace(); } // download latest versions JSON
-        String latestVersion = splitVersions[splitVersions.length - 1].substring(3).split("\"")[0]; // shitty JSON parsing, come @ me, square up homie
-        System.out.println(" " + latestVersion);
-
-        // download/extract/delete the latest bundle
-        String bundleFile = "KCauldron-" + latestVersion + "-bundle.zip";
-        String downloadUrl = "https://repo.prok.pw/pw/prok/KCauldron/" + latestVersion + "/" + bundleFile;
-        DownloadUtil.download(downloadUrl, new File(destination, bundleFile)); // download bundle
-        DownloadUtil.unzip(new File(destination, bundleFile)); // unzip downloaded zip
-        new File(destination, bundleFile).delete(); // delete extracted zip
-        new File(destination, "README.txt").delete(); // delete pointless readme
-
-        for (File file : destination.listFiles()) if (file.getAbsolutePath().endsWith(".jar")) return file.getName();
-        return "KCauldron.jar";
     }
 
 }
