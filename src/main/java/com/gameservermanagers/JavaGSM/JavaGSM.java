@@ -48,7 +48,7 @@ public class JavaGSM {
 
     public static void main(String[] args) {
         header();
-        System.out.println("Version" + version + " dev @ScarszRawr & collective GameServerManagers team");
+        System.out.println("v" + version + " dev @ScarszRawr & collective GameServerManagers team");
         System.out.println("https://github.com/GameServerManagers/JavaGSM");
         System.out.println();
 
