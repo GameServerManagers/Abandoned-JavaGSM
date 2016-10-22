@@ -5,8 +5,8 @@ import com.gameservermanagers.JavaGSM.ServerInstaller;
 import com.gameservermanagers.JavaGSM.util.ConfigUtil;
 import com.gameservermanagers.JavaGSM.util.DownloadUtil;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
+import com.google.gson.internal.LinkedTreeMap;
 import org.apache.commons.io.FileUtils;
-import org.jsoup.Jsoup;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,18 +64,6 @@ public class Minecraft implements ServerInstaller {
 
         return jarFile;
     }
-    public static String install_Thermos(File destination) {
-        // download/extract/delete the latest thermos server with libraries and forge included
-        String downloadUrl = "https://github.com/CyberdyneCC/ThermosServer/archive/master.zip";
-        DownloadUtil.download(downloadUrl, new File(destination, "master.zip")); // download
-        DownloadUtil.unzip(new File(destination, "master.zip")); // unzip downloaded zip
-        new File(destination, "master.zip").delete(); // delete extracted zip
-        new File(destination, "ThermosServer-master").renameTo(new File ("Thermos")); //rename folder
-        //put the thing you sent me here
-        new File(destination+"/Thermos", ""/* Scarsz put the name of the jar you just downloaded here */).renameTo(new File ("Thermos.jar"));
-
-        return "Thermos.jar";
-    }
     public static String install_Spigot(File destination) {
         // download spigot jar
         String jarFile = "spigot.jar";
@@ -84,11 +72,27 @@ public class Minecraft implements ServerInstaller {
 
         return jarFile;
     }
+    public static String install_Thermos(File destination) {
+        File librariesDestination = new File(destination, "libraries.zip");
+        File thermosJarDestination = new File(destination, "Thermos.jar");
+
+        List<String> availableAssets = new LinkedList<>();
+        List<LinkedTreeMap<String, Object>> assetsFromApi = (List<LinkedTreeMap<String, Object>>) ((LinkedTreeMap<String, Object>) JavaGSM.gson.fromJson(DownloadUtil.getUrlAsString("https://api.github.com/repos/CyberdyneCC/Thermos/releases/latest"), LinkedTreeMap.class)).get("assets");
+        for (LinkedTreeMap<String, Object> asset : assetsFromApi)
+            if (asset.get("name").equals("libraries.zip")) {
+                DownloadUtil.download((String) asset.get("browser_download_url"), librariesDestination);
+                DownloadUtil.unzip(librariesDestination);
+                DownloadUtil.deleteFile(librariesDestination);
+            } else availableAssets.add((String) asset.get("browser_download_url"));
+        Collections.sort(availableAssets);
+        String downloadUrl = availableAssets.get(availableAssets.size() - 1);
+        DownloadUtil.download(downloadUrl, new File(destination, "Thermos.jar"));
+        return "Thermos.jar";
+    }
     public static String install_Vanilla(File destination) {
         // find latest version
         System.out.print("Obtaining latest version info...");
-        String latestVersion = null;
-        try { latestVersion = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("release\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
+        String latestVersion = DownloadUtil.getUrlAsString("https://launchermeta.mojang.com/mc/game/version_manifest.json").split("release\":\"")[1].split("\"")[0];
         if (latestVersion == null) {
             System.out.println("An error occurred during checking the latest version, aborting installation");
             return null;
@@ -105,8 +109,7 @@ public class Minecraft implements ServerInstaller {
     public static String install_VanillaSnapshot(File destination) {
         // find latest version
         System.out.print("Obtaining latest version info...");
-        String latestSnapshot = null;
-        try { latestSnapshot = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("snapshot\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
+        String latestSnapshot = DownloadUtil.getUrlAsString("https://launchermeta.mojang.com/mc/game/version_manifest.json").split("snapshot\":\"")[1].split("\"")[0];
         if (latestSnapshot == null) {
             System.out.println("An error occurred during checking the latest snapshot, aborting installation");
             return null;
