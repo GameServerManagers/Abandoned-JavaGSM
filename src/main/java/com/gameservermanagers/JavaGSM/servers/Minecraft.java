@@ -64,7 +64,6 @@ public class Minecraft implements ServerInstaller {
 
         return jarFile;
     }
-
     public static String install_KCauldronUseThermosInstead(File destination) {
         // find the latest version
         System.out.print("Obtaining latest KCauldron build...");
@@ -84,7 +83,6 @@ public class Minecraft implements ServerInstaller {
         for (File file : destination.listFiles()) if (file.getAbsolutePath().endsWith(".jar")) return file.getName();
         return "KCauldron.jar";
     }
-
     public static String install_Spigot(File destination) {
         // download spigot jar
         String jarFile = "spigot.jar";
@@ -93,7 +91,6 @@ public class Minecraft implements ServerInstaller {
 
         return jarFile;
     }
-
     public static String install_Vanilla(File destination) {
         // find latest version
         System.out.print("Obtaining latest version info...");
@@ -112,7 +109,6 @@ public class Minecraft implements ServerInstaller {
 
         return jarFile;
     }
-
     public static String install_VanillaSnapshot(File destination) {
         // find latest version
         System.out.print("Obtaining latest version info...");
