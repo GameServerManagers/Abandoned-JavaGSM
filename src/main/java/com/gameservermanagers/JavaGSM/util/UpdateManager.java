@@ -9,8 +9,6 @@ import java.util.List;
 
 public class UpdateManager {
 
-    // TODO: make this shit work fam
-
     public static void checkForUpdates() {
         System.out.print("Checking for updates...");
         String latest = DownloadUtil.getUrlAsString("https://raw.githubusercontent.com/" + JavaGSM.config.get("repo") + "/master/latest").split("  ")[1].split("\\n")[0].replace(" ", "");
@@ -31,6 +29,7 @@ public class UpdateManager {
 
         System.out.println(" | update available");
 
+        //TODO: make this actually work
         try {
             String latestUrl = "http://scarsz.tech:8080/job/JavaGSM/lastSuccessfulBuild/artifact/target/JavaGSM.jar";
             File destination = new File(JavaGSM.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
