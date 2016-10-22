@@ -90,6 +90,18 @@ public class JavaGSM {
                 case "-start":
                     start(argument);
                     break;
+                case "-c":
+                case "-configure":
+                    configure(argument);
+                    break;
+                case "-st":
+                case "-stop":
+                    stop(argument);
+                    break;
+                case "-u":
+                case "-update":
+                    update(argument);
+                    break;
                 default:
                     System.out.println("Unknown flag \"" + args[i] + (argument == null ? "" : " " + argument) + "\"");
                     break;
@@ -161,7 +173,19 @@ public class JavaGSM {
     }
 
     private static void start(@Nullable String argument) {
-
+        // TODO:Make Start Command
+    }
+    
+    private static void configure(@Nullable String argument) {
+        // TODO:Make Configure Command
+    }
+    
+    private static void stop(@Nullable String argument) {
+        // TODO:Make Stop Command
+    }
+    
+    private static void update(@Nullable String argument) {
+        // TODO:Make Update Command
     }
 
     //region Utilities
