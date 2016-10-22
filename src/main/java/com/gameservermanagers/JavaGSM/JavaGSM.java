@@ -56,7 +56,7 @@ public class JavaGSM {
 
         // check if last update check was over 24 hours ago
         long diff = System.currentTimeMillis() - (long) config.get("lastUpdateCheck");
-        if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
+        if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) >  1) {
             // check for updates
             UpdateManager.checkForUpdates();
             System.out.println();
