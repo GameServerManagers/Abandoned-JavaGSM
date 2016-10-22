@@ -1,35 +1,5 @@
 package com.gameservermanagers.JavaGSM;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.io.FileUtils;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
-
 import com.gameservermanagers.JavaGSM.util.ResourceUtil;
 import com.gameservermanagers.JavaGSM.util.SleepUtil;
 import com.gameservermanagers.JavaGSM.util.UpdateManager;
@@ -38,7 +8,23 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.stream.JsonWriter;
-import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil.ToStringAdapter;
+import org.apache.commons.io.FileUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
+
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings({"WeakerAccess", "unchecked"})
 public class JavaGSM {
@@ -70,10 +56,10 @@ public class JavaGSM {
         loadConfig();
         
         long diff = System.currentTimeMillis() - (long) config.get("lastuc");
-		if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
-		    UpdateManager.checkForUpdates();
-		    System.out.println();
-		}
+        if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
+            UpdateManager.checkForUpdates();
+            System.out.println();
+        }
         config.put("lastuc", System.currentTimeMillis());
         saveConfig();
 
@@ -222,19 +208,19 @@ public class JavaGSM {
     }
     
     private static void saveConfig() {
-    	if (!configFile.exists()) return;
-    	for (Map.Entry<String, Object> entry : config.entrySet()) {
-			//Store in config file
-    		try {
-    			JsonWriter writer = new JsonWriter(new FileWriter(configFile));
-    			writer.beginObject();
-    			writer.name(entry.getKey()).value(entry.getValue().toString());
-    			writer.endObject();
-    			writer.close();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-		}
+        if (!configFile.exists()) return;
+        for (Map.Entry<String, Object> entry : config.entrySet()) {
+            //Store in config file
+            try {
+                JsonWriter writer = new JsonWriter(new FileWriter(configFile));
+                writer.beginObject();
+                writer.name(entry.getKey()).value(entry.getValue().toString());
+                writer.endObject();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     //endregion
 
