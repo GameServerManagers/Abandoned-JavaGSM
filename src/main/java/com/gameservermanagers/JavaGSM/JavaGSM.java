@@ -88,6 +88,10 @@ public class JavaGSM {
             if (args.length > i + 1 && !args[i + 1].startsWith("-")) argument = args[i + 1];
 
             switch (args[i]) {
+                case "-c":
+                case "-configure":
+                    configure(argument);
+                    break;
                 case "-i":
                 case "-install":
                     install(argument);
@@ -95,10 +99,6 @@ public class JavaGSM {
                 case "-s":
                 case "-start":
                     start(argument);
-                    break;
-                case "-c":
-                case "-configure":
-                    configure(argument);
                     break;
                 case "-st":
                 case "-stop":
@@ -113,6 +113,10 @@ public class JavaGSM {
                     break;
             }
         }
+    }
+
+    private static void configure(@Nullable String argument) {
+        // TODO:Make Configure Command
     }
 
     /**
@@ -182,10 +186,6 @@ public class JavaGSM {
         // TODO:Make Start Command
     }
     
-    private static void configure(@Nullable String argument) {
-        // TODO:Make Configure Command
-    }
-    
     private static void stop(@Nullable String argument) {
         // TODO:Make Stop Command
     }
@@ -197,6 +197,7 @@ public class JavaGSM {
     //region Utilities
     private static void loadConfig() {
         if (!configFile.exists()) ResourceUtil.copyResourceToFile("gsm-default.json", configFile);
+
         try {
             config.clear();
             for (Map.Entry<String, Object> configOption : ((LinkedTreeMap<String, Object>) gson.fromJson(FileUtils.readFileToString(configFile, Charset.defaultCharset()), LinkedTreeMap.class)).entrySet())
