@@ -2,8 +2,8 @@ package com.gameservermanagers.JavaGSM.servers;
 
 import com.gameservermanagers.JavaGSM.JavaGSM;
 import com.gameservermanagers.JavaGSM.ServerInstaller;
-import com.gameservermanagers.JavaGSM.util.DownloadUtil;
 import com.gameservermanagers.JavaGSM.util.ConfigUtil;
+import com.gameservermanagers.JavaGSM.util.DownloadUtil;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -13,29 +13,19 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class Minecraft implements ServerInstaller {
 
-    private static String getLatestVersion() {
-        System.out.print("Obtaining latest version info...");
-        String latestVersion = null;
-        try { latestVersion = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("release\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
-        if (latestVersion == null) {
-            System.out.println("An error occurred during checking the latest version, aborting installation");
-            return null;
-        }
-        System.out.println(" " + latestVersion);
-        return latestVersion;
-    }
-
     public static void install(File destination) {
         // populate possible server software
         List<String> availableServerSoftware = new LinkedList<>();
         for (Method method : Minecraft.class.getDeclaredMethods())
             if (method.getName().startsWith("install_")) availableServerSoftware.add(method.getName().substring(8));
+        Collections.sort(availableServerSoftware);
 
         String requestedSoftware = availableServerSoftware.get(UserInputUtil.questionList("Which server software do you want to install", availableServerSoftware));
         System.out.println("Installing " + requestedSoftware + "...\n");
@@ -68,8 +58,14 @@ public class Minecraft implements ServerInstaller {
 
     public static String install_Vanilla(File destination) {
         // find latest version
-        String latestVersion = getLatestVersion();
-        if (latestVersion == null) return null;
+        System.out.print("Obtaining latest version info...");
+        String latestVersion = null;
+        try { latestVersion = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("release\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
+        if (latestVersion == null) {
+            System.out.println("An error occurred during checking the latest version, aborting installation");
+            return null;
+        }
+        System.out.println(" " + latestVersion);
 
         // download vanilla jar
         String jarFile = "minecraft_server." + latestVersion + ".jar";
@@ -81,12 +77,15 @@ public class Minecraft implements ServerInstaller {
 
     public static String install_VanillaSnapshot(File destination) {
         // find latest version
+        System.out.print("Obtaining latest version info...");
         String latestSnapshot = null;
         try { latestSnapshot = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("snapshot\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
         if (latestSnapshot == null) {
             System.out.println("An error occurred during checking the latest snapshot, aborting installation");
             return null;
         }
+        System.out.println(" " + latestSnapshot);
+
         // download vanilla jar
         String jarFile = "minecraft_server." + latestSnapshot + ".jar";
         String downloadUrl = "https://s3.amazonaws.com/Minecraft.Download/versions/" + latestSnapshot + "/" + jarFile;
