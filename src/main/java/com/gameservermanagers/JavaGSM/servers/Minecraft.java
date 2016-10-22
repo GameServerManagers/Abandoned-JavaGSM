@@ -19,8 +19,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Minecraft implements ServerInstaller {
 
-    // TODO: add more stuff to default command line
-
     private static String getLatestVersion() {
         System.out.print("Obtaining latest version info...");
         String latestVersion = null;
