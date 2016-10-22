@@ -1,12 +1,26 @@
 package com.gameservermanagers.JavaGSM;
 
-import com.gameservermanagers.JavaGSM.util.ResourceUtil;
-import com.gameservermanagers.JavaGSM.util.SleepUtil;
-import com.gameservermanagers.JavaGSM.util.UpdateManager;
-import com.gameservermanagers.JavaGSM.util.UserInputUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -15,13 +29,13 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.util.*;
+import com.gameservermanagers.JavaGSM.util.ResourceUtil;
+import com.gameservermanagers.JavaGSM.util.SleepUtil;
+import com.gameservermanagers.JavaGSM.util.UpdateManager;
+import com.gameservermanagers.JavaGSM.util.UserInputUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 
 @SuppressWarnings({"WeakerAccess", "unchecked"})
 public class JavaGSM {
@@ -51,10 +65,13 @@ public class JavaGSM {
 
         System.out.println("Loading config...");
         loadConfig();
-
-        // TODO: make this periodic
-        UpdateManager.checkForUpdates();
-        System.out.println();
+        
+        long diff = System.currentTimeMillis() - (long) config.get("lastuc");
+		if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
+		    UpdateManager.checkForUpdates();
+		    System.out.println();
+		}
+        config.put("lastuc", System.currentTimeMillis());
 
         if (args.length == 0) {
             System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
@@ -89,6 +106,18 @@ public class JavaGSM {
                 case "-s":
                 case "-start":
                     start(argument);
+                    break;
+                case "-c":
+                case "-configure":
+                    configure(argument);
+                    break;
+                case "-st":
+                case "-stop":
+                    stop(argument);
+                    break;
+                case "-u":
+                case "-update":
+                    update(argument);
                     break;
                 default:
                     System.out.println("Unknown flag \"" + args[i] + (argument == null ? "" : " " + argument) + "\"");
@@ -136,7 +165,7 @@ public class JavaGSM {
             System.out.println("Invalid server \"" + gameServerName + "\"");
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
-            System.out.print("This should have never happened. Shit the bed. Tell the developers about this one, cause it's huge");
+            System.out.print("An unknown error occurred, please content the developers immediately!");
             SleepUtil.printlnEllipsis();
         }
     }
@@ -161,7 +190,19 @@ public class JavaGSM {
     }
 
     private static void start(@Nullable String argument) {
-
+        // TODO:Make Start Command
+    }
+    
+    private static void configure(@Nullable String argument) {
+        // TODO:Make Configure Command
+    }
+    
+    private static void stop(@Nullable String argument) {
+        // TODO:Make Stop Command
+    }
+    
+    private static void update(@Nullable String argument) {
+        // TODO:Make Update Command
     }
 
     //region Utilities
