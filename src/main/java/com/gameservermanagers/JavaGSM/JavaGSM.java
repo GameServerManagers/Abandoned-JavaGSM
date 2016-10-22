@@ -51,8 +51,10 @@ public class JavaGSM {
 
         System.out.println("Loading config...");
         loadConfig();
-
-        // TODO: make this periodic
+        
+        DateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
+        Date date = new Date();
+        //dateFormat.format(date)
         UpdateManager.checkForUpdates();
         System.out.println();
 
