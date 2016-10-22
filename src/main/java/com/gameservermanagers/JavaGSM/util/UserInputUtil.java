@@ -46,7 +46,7 @@ public class UserInputUtil {
             for (String option : options) {
                 System.out.println((options.indexOf(option) + 1) + ": " + option);
             }
-            System.out.print("# selection: ");
+            System.out.print("# of selection: ");
             response = System.console().readLine();
         }
 
