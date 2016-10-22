@@ -61,7 +61,12 @@ public class Minecraft implements ServerInstaller {
         String memory = UserInputUtil.questionString("How much memory should be this server use (ex. 1G, 512M)").toUpperCase();
 
         // write user's input to eula acceptance to file
-        boolean userAgreesToEula = UserInputUtil.questionYesNo("Do you agree to follow the Minecraft EULA");
+        boolean userAgreesToEula = UserInputUtil.questionYesNo("Do you agree to follow the Minecraft EULA?");
+        // No reason to continue. If the EULA is not accepted no files will be generated and the installation should fail.
+        if(!userAgreesToEula){
+            System.out.println("Installation failed.");
+            return;
+        }
         try { FileUtils.writeStringToFile(new File(destination, "eula.txt"), "eula=" + userAgreesToEula, Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
 
         try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), ConfigUtil.getDefaultConfigAsJson(Minecraft.class).replace("{MEMORY}", memory).replace("{JARFILE}", jarFile), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
