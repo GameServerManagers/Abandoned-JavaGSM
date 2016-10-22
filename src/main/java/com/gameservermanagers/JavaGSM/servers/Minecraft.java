@@ -79,6 +79,22 @@ public class Minecraft implements ServerInstaller {
         return jarFile;
     }
 
+    public static String install_VanillaSnapshot(File destination) {
+        // find latest version
+        String latestSnapshot = null;
+        try { latestSnapshot = Jsoup.connect("https://launchermeta.mojang.com/mc/game/version_manifest.json").ignoreContentType(true).get().html().split("snapshot\":\"")[1].split("\"")[0]; } catch (IOException e) { e.printStackTrace(); }
+        if (latestSnapshot == null) {
+            System.out.println("An error occurred during checking the latest snapshot, aborting installation");
+            return null;
+        }
+        // download vanilla jar
+        String jarFile = "minecraft_server." + latestSnapshot + ".jar";
+        String downloadUrl = "https://s3.amazonaws.com/Minecraft.Download/versions/" + latestSnapshot + "/" + jarFile;
+        DownloadUtil.download(downloadUrl, new File(destination, jarFile));
+
+        return jarFile;
+    }
+
     public static String install_CraftBukkit(File destination) {
         // download spigot jar
         String jarFile = "craftbukkit.jar";
