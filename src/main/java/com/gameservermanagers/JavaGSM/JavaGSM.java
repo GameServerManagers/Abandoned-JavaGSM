@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings({"WeakerAccess", "unchecked"})
+@SuppressWarnings("WeakerAccess")
 public class JavaGSM {
 
     public static final String version = "0.1.0";
@@ -194,7 +194,7 @@ public class JavaGSM {
             System.out.println("Invalid server \"" + gameServerName + "\"");
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
-            System.out.print("An unknown error occurred, please content the developers with information about what you were doing");
+            System.out.print("An unknown error occurred, please contact the developers with information about what you were doing");
             SleepUtil.printlnEllipsis();
         }
     }
