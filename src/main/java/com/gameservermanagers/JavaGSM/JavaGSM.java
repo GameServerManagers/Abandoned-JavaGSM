@@ -136,7 +136,7 @@ public class JavaGSM {
             System.out.println("Invalid server \"" + gameServerName + "\"");
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
-            System.out.print("This should have never happened. Shit the bed. Tell the developers about this one, cause it's huge");
+            System.out.print("An unknown error occurred, please content the developers immediately!");
             SleepUtil.printlnEllipsis();
         }
     }
