@@ -64,24 +64,17 @@ public class Minecraft implements ServerInstaller {
 
         return jarFile;
     }
-    public static String install_KCauldronUseThermosInstead(File destination) {
-        // find the latest version
-        System.out.print("Obtaining latest KCauldron build...");
-        String[] splitVersions = new String[0];
-        try { splitVersions = Jsoup.connect("https://api.prok.pw/repo/versions/pw.prok/KCauldron").ignoreContentType(true).get().html().split("version"); } catch (IOException e) { e.printStackTrace(); } // download latest versions JSON
-        String latestVersion = splitVersions[splitVersions.length - 1].substring(3).split("\"")[0]; // shitty JSON parsing, come @ me, square up homie
-        System.out.println(" " + latestVersion);
+    public static String install_Thermos(File destination) {
+        // download/extract/delete the latest thermos server with libraries and forge included
+        String downloadUrl = "https://github.com/CyberdyneCC/ThermosServer/archive/master.zip";
+        DownloadUtil.download(downloadUrl, new File(destination, "master.zip")); // download
+        DownloadUtil.unzip(new File(destination, "master.zip")); // unzip downloaded zip
+        new File(destination, "master.zip").delete(); // delete extracted zip
+        new File(destination, "ThermosServer-master").renameTo(new File ("Thermos")); //rename folder
+        //put the thing you sent me here
+        new File(destination+"/Thermos", ""/* Scarsz put the name of the jar you just downloaded here */).renameTo(new File ("Thermos.jar"));
 
-        // download/extract/delete the latest bundle
-        String bundleFile = "KCauldron-" + latestVersion + "-bundle.zip";
-        String downloadUrl = "https://repo.prok.pw/pw/prok/KCauldron/" + latestVersion + "/" + bundleFile;
-        DownloadUtil.download(downloadUrl, new File(destination, bundleFile)); // download bundle
-        DownloadUtil.unzip(new File(destination, bundleFile)); // unzip downloaded zip
-        new File(destination, bundleFile).delete(); // delete extracted zip
-        new File(destination, "README.txt").delete(); // delete pointless readme
-
-        for (File file : destination.listFiles()) if (file.getAbsolutePath().endsWith(".jar")) return file.getName();
-        return "KCauldron.jar";
+        return "Thermos.jar";
     }
     public static String install_Spigot(File destination) {
         // download spigot jar
