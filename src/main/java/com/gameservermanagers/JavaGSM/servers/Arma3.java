@@ -5,9 +5,6 @@ import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 
 import java.io.File;
 
-/**
- * Created by Sigalita on 22-Oct-16.
- */
 public class Arma3 implements ServerInstaller {
 
     public static void install(File destination) {
