@@ -29,13 +29,13 @@ public class JavaGSM {
 
     public static final String version = "0.1.0";
     public static final Map<String, String> flagDefinitions = new LinkedHashMap<String, String>() {{
-        put("-c  (-configure)", "Configure GSM or an existing server");
-        put("-fu (-forceupdate)", "Force an update check cycle");
-        put("-h  (-help)", "Displays this help text");
-        put("-i  (-install)", "Install a new server");
-        put("-s  (-start)", "Start a non-running existing server");
-        put("-st (-stop)", "Stop a running existing server");
-        put("-u  (-update)", "Update an existing server");
+        put("-c  (--configure)", "Configure GSM or an existing server");
+        put("-fu (--forceupdate)", "Force an update check cycle");
+        put("-h  (--help)", "Displays this help text");
+        put("-i  (--install)", "Install a new server");
+        put("-s  (--start)", "Start a non-running existing server");
+        put("-st (--stop)", "Stop a running existing server");
+        put("-u  (--update)", "Update an existing server");
     }};
 
     public static final boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("win");
@@ -78,31 +78,31 @@ public class JavaGSM {
 
             switch (args[i]) {
                 case "-c":
-                case "-configure":
+                case "--configure":
                     configure(argument);
                     break;
                 case "-fu":
-                case "-forceupdate":
+                case "--forceupdate":
                     forceUpdate();
                     break;
                 case "-h":
-                case "-help":
+                case "--help":
                     showHelp(argument);
                     break;
                 case "-i":
-                case "-install":
+                case "--install":
                     install(argument);
                     break;
                 case "-s":
-                case "-start":
+                case "--start":
                     start(argument);
                     break;
                 case "-st":
-                case "-stop":
+                case "--stop":
                     stop(argument);
                     break;
                 case "-u":
-                case "-update":
+                case "--update":
                     update(argument);
                     break;
                 default:
