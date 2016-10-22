@@ -47,8 +47,8 @@ public class JavaGSM {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static void main(String[] args) {
-        // TODO: better header
-        System.out.println("JavaGSM v" + version + " dev @ScarszRawr & collective GameServerManagers team");
+        header();
+        System.out.println("Version" + version + " dev @ScarszRawr & collective GameServerManagers team");
         System.out.println("https://github.com/GameServerManagers/JavaGSM");
         System.out.println();
 
@@ -265,6 +265,16 @@ public class JavaGSM {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private static void header() {
+        // Looks weird due to escape characters, run to see actual ascii "Art"
+        System.out.println ("       _                   _____  _____ __  __ ");
+        System.out.println ("      | |                 / ____|/ ____|  \\/  |");
+        System.out.println ("      | | __ ___   ____ _| |  __| (___ | \\  / |");
+        System.out.println ("  _   | |/ _` \\ \\ / / _` | | |_ |\\___ \\| |\\/| |");
+        System.out.println (" | |__| | (_| |\\ V / (_| | |__| |____) | |  | |");
+        System.out.println ("  \\____/ \\__,_| \\_/ \\__,_|\\_____|_____/|_|  |_|");
+        System.out.println ("                                               ");
     }
     //endregion
 
