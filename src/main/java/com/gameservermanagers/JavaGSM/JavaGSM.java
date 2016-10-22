@@ -53,37 +53,30 @@ public class JavaGSM {
         System.out.print("Loading config...");
         loadConfig();
         System.out.println(" done");
-        
-        long diff = System.currentTimeMillis() - (long) config.get("lastuc");
+
+        // check if last update check was over 24 hours ago
+        long diff = System.currentTimeMillis() - (long) config.get("lastUpdateCheck");
         if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
+            // check for updates
             UpdateManager.checkForUpdates();
             System.out.println();
+
+            // save the current millis count to the config
+            config.put("lastUpdateCheck", System.currentTimeMillis());
+            saveConfig();
         }
-        config.put("lastuc", System.currentTimeMillis());
-        saveConfig();
 
+        // if no arguments have been given show help
         if (args.length == 0) {
-            System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
-            System.out.println("hint: to install a new server use -i");
-            System.out.println();
-
-            // TODO: also appropriate the space before the (-argument)'s
-            int maxSpace = 0;
-            for (Map.Entry<String, String> definition : argumentDefinitions.entrySet())
-                if (maxSpace < definition.getKey().length()) maxSpace = definition.getKey().length();
-
-            for (Map.Entry<String, String> entry : argumentDefinitions.entrySet()) {
-                System.out.print(entry.getKey());
-                for (int i = 0; i < maxSpace - entry.getKey().length(); i++) System.out.print(" ");
-                System.out.println(" | " + entry.getValue());
-            }
-
+            showHelp(null);
             System.exit(0);
         }
 
         for (int i = 0; i < args.length; i++) {
+            // only doing processing on flags
             if (!args[i].startsWith("-")) continue;
 
+            // check if the next argument from args doesn't start with a -, if it doesn't, it should be treated as an argument for this flag
             String argument = null;
             if (args.length > i + 1 && !args[i + 1].startsWith("-")) argument = args[i + 1];
 
@@ -91,6 +84,10 @@ public class JavaGSM {
                 case "-c":
                 case "-configure":
                     configure(argument);
+                    break;
+                case "-h":
+                case "--help":
+                    showHelp(argument);
                     break;
                 case "-i":
                 case "-install":
@@ -115,8 +112,34 @@ public class JavaGSM {
         }
     }
 
+    /**
+     * Display the configuration management menu
+     * @param argument Advanced automatic menu traversal, WIP
+     */
     private static void configure(@Nullable String argument) {
         // TODO:Make Configure Command
+    }
+
+    /**
+     * Display JavaGSM's help text
+     * @param argument The flag to be elaborated on if not null
+     */
+    private static void showHelp(@Nullable String argument) {
+        System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
+        System.out.println("hint: to install a new server use -i");
+        System.out.println();
+
+        // TODO: make this respond to the given argument
+        // TODO: also appropriate the space before the (-argument)'s
+        int maxSpace = 0;
+        for (Map.Entry<String, String> definition : argumentDefinitions.entrySet())
+            if (maxSpace < definition.getKey().length()) maxSpace = definition.getKey().length();
+
+        for (Map.Entry<String, String> entry : argumentDefinitions.entrySet()) {
+            System.out.print(entry.getKey());
+            for (int i = 0; i < maxSpace - entry.getKey().length(); i++) System.out.print(" ");
+            System.out.println(" | " + entry.getValue());
+        }
     }
 
     /**
@@ -182,14 +205,26 @@ public class JavaGSM {
         return choices.get(UserInputUtil.questionList("Which server do you want to install", choices));
     }
 
+    /**
+     * Start the given server. If the argument is null, prompt the user for selecting a server to start.
+     * @param argument The given server to start
+     */
     private static void start(@Nullable String argument) {
         // TODO:Make Start Command
     }
-    
+
+    /**
+     * Stop the given server. If the argument is null, prompt the user for selecting a server to stop.
+     * @param argument The given server to stop
+     */
     private static void stop(@Nullable String argument) {
         // TODO:Make Stop Command
     }
-    
+
+    /**
+     * Update the given server. If the argument is null, prompt the user for selecting a server to update.
+     * @param argument The given server to update
+     */
     private static void update(@Nullable String argument) {
         // TODO:Make Update Command
     }
