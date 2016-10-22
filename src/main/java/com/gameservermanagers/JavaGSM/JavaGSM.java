@@ -28,8 +28,10 @@ import java.util.concurrent.TimeUnit;
 public class JavaGSM {
 
     public static final String version = "0.1.0";
-    public static final Map<String, String> argumentDefinitions = new LinkedHashMap<String, String>() {{
+    public static final Map<String, String> flagDefinitions = new LinkedHashMap<String, String>() {{
         put("-c  (-configure)", "Configure GSM or an existing server");
+        put("-fu (-forceupdate)", "Force an update check cycle");
+        put("-h  (-help)", "Displays this help text");
         put("-i  (-install)", "Install a new server");
         put("-s  (-start)", "Start a non-running existing server");
         put("-st (-stop)", "Stop a running existing server");
@@ -57,13 +59,7 @@ public class JavaGSM {
         // check if last update check was over 24 hours ago
         long diff = (long) (System.currentTimeMillis() - (double) config.get("lastUpdateCheck"));
         if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) >  1) {
-            // check for updates
-            UpdateManager.checkForUpdates();
-            System.out.println();
-
-            // save the current millis count to the config
-            config.put("lastUpdateCheck", System.currentTimeMillis());
-            saveConfig();
+            forceUpdate();
         }
 
         // if no arguments have been given show help
@@ -85,8 +81,12 @@ public class JavaGSM {
                 case "-configure":
                     configure(argument);
                     break;
+                case "-fu":
+                case "-forceupdate":
+                    forceUpdate();
+                    break;
                 case "-h":
-                case "--help":
+                case "-help":
                     showHelp(argument);
                     break;
                 case "-i":
@@ -121,6 +121,19 @@ public class JavaGSM {
     }
 
     /**
+     * Forces an update check cycle
+     */
+    private static void forceUpdate() {
+        // check for updates
+        UpdateManager.checkForUpdates();
+        System.out.println();
+
+        // save the current millis count to the config
+        config.put("lastUpdateCheck", System.currentTimeMillis());
+        saveConfig();
+    }
+
+    /**
      * Display JavaGSM's help text
      * @param argument The flag to be elaborated on if not null
      */
@@ -132,10 +145,10 @@ public class JavaGSM {
         // TODO: make this respond to the given argument
         // TODO: also appropriate the space before the (-argument)'s
         int maxSpace = 0;
-        for (Map.Entry<String, String> definition : argumentDefinitions.entrySet())
+        for (Map.Entry<String, String> definition : flagDefinitions.entrySet())
             if (maxSpace < definition.getKey().length()) maxSpace = definition.getKey().length();
 
-        for (Map.Entry<String, String> entry : argumentDefinitions.entrySet()) {
+        for (Map.Entry<String, String> entry : flagDefinitions.entrySet()) {
             System.out.print(entry.getKey());
             for (int i = 0; i < maxSpace - entry.getKey().length(); i++) System.out.print(" ");
             System.out.println(" | " + entry.getValue());
@@ -181,7 +194,7 @@ public class JavaGSM {
             System.out.println("Invalid server \"" + gameServerName + "\"");
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
-            System.out.print("An unknown error occurred, please content the developers immediately!");
+            System.out.print("An unknown error occurred, please content the developers with information about what you were doing");
             SleepUtil.printlnEllipsis();
         }
     }
