@@ -1,10 +1,8 @@
 package com.gameservermanagers.JavaGSM.util;
 
 import com.gameservermanagers.JavaGSM.JavaGSM;
-import org.jsoup.Jsoup;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +13,7 @@ public class UpdateManager {
 
     public static void checkForUpdates() {
         System.out.print("Checking for updates...");
-        String latest = ""; try { latest = Jsoup.connect("https://raw.githubusercontent.com/GameServerManagers/JavaGSM/master/latest").get().html().split("  ")[1].split("\\n")[0].replace(" ", ""); } catch (IOException e) { System.out.println("An unknown error occurred while getting the latest version"); e.printStackTrace(); }
+        String latest = DownloadUtil.getUrlAsString("https://raw.githubusercontent.com/" + JavaGSM.config.get("repo") + "/master/latest").split("  ")[1].split("\\n")[0].replace(" ", "");
         System.out.print(" latest: " + latest);
 
         List<Integer> currentNumbers = new LinkedList<>();
