@@ -1,12 +1,26 @@
 package com.gameservermanagers.JavaGSM;
 
-import com.gameservermanagers.JavaGSM.util.ResourceUtil;
-import com.gameservermanagers.JavaGSM.util.SleepUtil;
-import com.gameservermanagers.JavaGSM.util.UpdateManager;
-import com.gameservermanagers.JavaGSM.util.UserInputUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
@@ -15,13 +29,13 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.util.*;
+import com.gameservermanagers.JavaGSM.util.ResourceUtil;
+import com.gameservermanagers.JavaGSM.util.SleepUtil;
+import com.gameservermanagers.JavaGSM.util.UpdateManager;
+import com.gameservermanagers.JavaGSM.util.UserInputUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 
 @SuppressWarnings({"WeakerAccess", "unchecked"})
 public class JavaGSM {
@@ -52,18 +66,12 @@ public class JavaGSM {
         System.out.println("Loading config...");
         loadConfig();
         
-        DateFormat dateFormat = new SimpleDateFormat("dd MM yyyy");
-        Date date = new Date();
-        try {
-            long diff = dateFormat.format(date).getTime() - config.get("lastuc").getTime();
-            if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
-                UpdateManager.checkForUpdates();
-                System.out.println();
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        config.put("lastuc", dateFormat.format(date).getTime());
+        long diff = System.currentTimeMillis() - (long) config.get("lastuc");
+		if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)>1){
+		    UpdateManager.checkForUpdates();
+		    System.out.println();
+		}
+        config.put("lastuc", System.currentTimeMillis());
 
         if (args.length == 0) {
             System.out.println("syntax: -flag [optional value] -flag [optional value] -flag [optional value] etc");
