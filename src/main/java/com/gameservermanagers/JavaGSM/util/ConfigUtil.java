@@ -1,6 +1,7 @@
 package com.gameservermanagers.JavaGSM.util;
 
 import com.gameservermanagers.JavaGSM.JavaGSM;
+import com.gameservermanagers.JavaGSM.ServerInstaller;
 import com.gameservermanagers.JavaGSM.servers.Minecraft;
 import com.google.gson.internal.LinkedTreeMap;
 import org.apache.commons.io.FileUtils;
@@ -37,12 +38,12 @@ public class ConfigUtil {
         }
         return null;
     }
-    public static void writeDefaultConfigToFile(Class<?> server, File destination) {
+    public static void writeDefaultConfigToFile(Class<? extends ServerInstaller> server, File destination) {
         // get default config for all servers
         LinkedTreeMap<String, Object> newConfig = JavaGSM.gson.fromJson(ResourceUtil.getResourceAsString("gsm-server-default.json"), LinkedTreeMap.class);
 
         // set config game type
-        newConfig.put("game", server.getClass().getName().replace("com.gameservermanagers.JavaGSM.servers.", ""));
+        newConfig.put("game", server.getSimpleName());
 
         // get any server-specific config changes from defaultCommandLines
         if (defaultCommandLines.containsKey(server.getClass()))
