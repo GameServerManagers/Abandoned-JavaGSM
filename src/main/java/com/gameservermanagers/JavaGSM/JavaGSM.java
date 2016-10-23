@@ -240,7 +240,32 @@ public class JavaGSM {
      * @param argument The given server to update
      */
     private static void update(@Nullable String argument) {
-        // TODO
+        String gameServerName;
+        if (argument != null && argument.length() > 0) gameServerName = argument; else gameServerName = update_GetGame();
+
+        System.out.println("Updating " + gameServerName + " server...");
+        System.out.println();
+
+        // TODO: call update on said server file (also make update for each game server available
+    }
+
+    /**
+     * Get the name of a user-supplied game server class name to update
+     * @return the name of the server class name
+     */
+    private static String update_GetGame() {
+        List<String> choices = new LinkedList<>();
+        File folder = new File("servers/");
+        File[] listOfFiles = folder.listFiles();
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isDirectory()) {
+                choices.add(listOfFiles[i].getName());
+            }
+        }
+
+        Collections.sort(choices);
+        return choices.get(UserInputUtil.questionList("Which server do you want to update", choices));
     }
 
     //region Utilities
