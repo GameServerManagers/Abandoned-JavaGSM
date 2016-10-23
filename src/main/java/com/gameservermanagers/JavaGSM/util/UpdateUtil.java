@@ -11,7 +11,7 @@ public class UpdateUtil {
 
     public static void checkForUpdates() {
         System.out.print("Checking for updates...");
-        String latest = DownloadUtil.getUrlAsString("https://raw.githubusercontent.com/" + JavaGSM.config.get("repo") + "/master/latest").split("  ")[1].split("\\n")[0].replace(" ", "");
+        String latest = DownloadUtil.getUrlAsString("https://raw.githubusercontent.com/" + JavaGSM.config.get("repo") + "/master/latest").trim();
         System.out.print(" latest: " + latest);
 
         List<Integer> currentNumbers = new LinkedList<>();
@@ -19,8 +19,13 @@ public class UpdateUtil {
         List<Integer> latestNumbers = new LinkedList<>();
         for (String s : latest.split("\\.")) latestNumbers.add(Integer.valueOf(s));
 
-        boolean updateAvailable = false;
-        for (int i = 0; i < 3; i++) if (currentNumbers.get(i) < latestNumbers.get(i)) updateAvailable = true;
+        List<Boolean> results = new LinkedList<>();
+        for (int i = 0; i < 3; i++) results.add(currentNumbers.get(i) < latestNumbers.get(i));
+        boolean updateAvailable =
+                results.get(0) ||
+                (!results.get(0) && results.get(1)) ||
+                (!results.get(0) && !results.get(1) && results.get(2))
+        ;
 
         if (!updateAvailable) {
             System.out.println(" | no update available");

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class ConfigUtil {
@@ -29,17 +28,32 @@ public class ConfigUtil {
             e.printStackTrace();
         }
     }
-    public static LinkedTreeMap<String, Object> getDefaultConfig(Class<?> serverInstallerClass) {
-        LinkedTreeMap<String, Object> config = JavaGSM.gson.fromJson(ResourceUtil.getResourceAsString("gsm-server-default.json"), LinkedTreeMap.class);
-        for (Map.Entry<String, Object> entry : ((Set<Map.Entry<String, Object>>) JavaGSM.gson.fromJson(ResourceUtil.getResourceAsString(serverInstallerClass.getClass().getName()), HashMap.class).entrySet())) {
-            config.put(entry.getKey(), entry.getValue());
+    public static Object getConfigOptionFromFile(File file, String key) {
+        try {
+            LinkedTreeMap<String, Object> config = JavaGSM.gson.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), LinkedTreeMap.class);
+            return config.get(key);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return config;
+        return null;
     }
-    public static String getDefaultConfigAsJson(Class<?> serverInstallerClass) {
-        return JavaGSM.gson.toJson(getDefaultConfig(serverInstallerClass));
+    public static void writeDefaultConfigToFile(Class<?> server, File destination) {
+        // get default config for all servers
+        LinkedTreeMap<String, Object> newConfig = JavaGSM.gson.fromJson(ResourceUtil.getResourceAsString("gsm-server-default.json"), LinkedTreeMap.class);
+
+        // get any server-specific config changes from defaultCommandLines
+        if (defaultCommandLines.containsKey(server.getClass()))
+            for (Map.Entry<String, Object> entry : defaultCommandLines.get(server.getClass()).entrySet())
+                newConfig.put(entry.getKey(), entry.getValue());
+
+        // save new config to file
+        try {
+            FileUtils.writeStringToFile(destination, JavaGSM.gson.toJson(newConfig), Charset.defaultCharset());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    public static void writeConfigToFile(HashMap<String, Object> config, File output) {
+    public static void writeHashMapToFile(HashMap<String, Object> config, File output) {
         try {
             FileUtils.writeStringToFile(output, JavaGSM.gson.toJson(config), Charset.defaultCharset());
         } catch (IOException e) {

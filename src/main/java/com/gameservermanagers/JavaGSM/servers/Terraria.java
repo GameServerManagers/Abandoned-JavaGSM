@@ -13,11 +13,12 @@ public class Terraria implements ServerInstaller {
         String latestDownloadUrl = "https://github.com" + DownloadUtil.getUrlAsString("https://github.com/NyxStudios/TShock/releases/latest").split("<ul class=\"release-downloads\">")[1].split("<a href=\"")[1].split("\"")[0];
         System.out.println(" " + latestDownloadUrl);
 
-        DownloadUtil.download(latestDownloadUrl, new File(destination, "tshock.zip"));
-        DownloadUtil.unzip(new File(destination, "tshock.zip"));
-        new File(destination, "tshock.zip").delete();
+        File tShockArchive = new File(destination, "tshock.zip");
+        DownloadUtil.download(latestDownloadUrl, tShockArchive);
+        DownloadUtil.unzip(tShockArchive);
+        DownloadUtil.deleteFile(tShockArchive);
 
-        System.out.println("Finished installing TShock server.");
+        System.out.println("Finished installing TShock server. Start it with the -s flag.");
     }
 
 }

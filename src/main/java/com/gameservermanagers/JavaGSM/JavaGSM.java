@@ -1,5 +1,6 @@
 package com.gameservermanagers.JavaGSM;
 
+import com.gameservermanagers.JavaGSM.objects.ConfigMap;
 import com.gameservermanagers.JavaGSM.util.ResourceUtil;
 import com.gameservermanagers.JavaGSM.util.SleepUtil;
 import com.gameservermanagers.JavaGSM.util.UpdateUtil;
@@ -42,7 +43,7 @@ public class JavaGSM {
     public static final boolean isMac = System.getProperty("os.name").toLowerCase().startsWith("mac");
     public static final boolean isLinux = !isWindows && !isMac;
 
-    public static final Map<String, Object> config = new HashMap<>();
+    public static final ConfigMap<String, Object> config = new ConfigMap<>();
     public static final File configFile = new File("gsm.json");
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -54,13 +55,12 @@ public class JavaGSM {
 
         System.out.print("Loading config...");
         loadConfig();
+        config.defaults = gson.fromJson(ResourceUtil.getResourceAsString("gsm-default.json"), LinkedTreeMap.class);
         System.out.println(" done");
 
         // check if last update check was over 24 hours ago
         long diff = (long) (System.currentTimeMillis() - (double) config.get("lastUpdateCheck"));
-        if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) >  1) {
-            forceUpdate();
-        }
+        if (TimeUnit.MILLISECONDS.toDays(diff) >  1) forceUpdate();
 
         // if no arguments have been given show help
         if (args.length == 0) {
@@ -190,6 +190,7 @@ public class JavaGSM {
 
             System.out.println();
             installer.invoke(null, destination);
+            System.out.println();
         } catch (ClassNotFoundException e) {
             System.out.println("Invalid server \"" + gameServerName + "\"");
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

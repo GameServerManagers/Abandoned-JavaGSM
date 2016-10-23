@@ -52,8 +52,13 @@ public class Minecraft implements ServerInstaller {
         boolean userAgreesToEula = UserInputUtil.questionYesNo("Do you agree to follow the Minecraft EULA");
         try { FileUtils.writeStringToFile(new File(destination, "eula.txt"), "eula=" + userAgreesToEula, Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
 
-        try { FileUtils.writeStringToFile(new File(destination, "gsm.json"), ConfigUtil.getDefaultConfigAsJson(Minecraft.class).replace("{MEMORY}", memory).replace("{JARFILE}", jarFile), Charset.defaultCharset()); } catch (IOException e) { e.printStackTrace(); }
-        System.out.println("Finished installing server. Start it with " + new File(destination, "/Start-NoGSM." + (JavaGSM.isWindows ? "bat" : "sh")));
+        File serverConfig = new File(destination, "gsm.json");
+        ConfigUtil.writeDefaultConfigToFile(Minecraft.class, serverConfig);
+        ConfigUtil.changeConfigOptionInFile(serverConfig, "commandline", ((String) ConfigUtil.getConfigOptionFromFile(serverConfig, "commandline"))
+                .replace("{MEMORY}", memory)
+                .replace("{JARFILE}", jarFile)
+        );
+        System.out.println("Finished installing server. Start it with the -s flag.");
     }
 
     public static String install_CraftBukkit(File destination) {

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class SteamcmdUtil {
@@ -19,7 +18,7 @@ public class SteamcmdUtil {
     private static String steamcmdArchive = "steamcmd" + (JavaGSM.isWindows ? ".zip" : JavaGSM.isMac ? "_osx.tar.gz" : "_linux.tar.gz");
     private static String steamcmdExtension = JavaGSM.isWindows ? ".exe" : ".sh";
     private static String steamcmdExecutable = "steamcmd" + steamcmdExtension;
-    private static String steamcmdCommand = "+login {LOGIN} +force_install_dir {DESTINATION} +app_update {APP} validate +exit";
+    private static String steamcmdCommand = "+login {LOGIN} +force_install_dir \"{DESTINATION}\" +app_update {APP} validate +exit";
     private static String steamcmdUrl = "https://steamcdn-a.akamaihd.net/client/installer/" + steamcmdArchive;
 
     public static boolean check() {
@@ -28,9 +27,7 @@ public class SteamcmdUtil {
     public static boolean check(boolean attemptInstall) {
         System.out.print("Checking if SteamCMD is installed...");
 
-        boolean validSteamcmd = true;
-        if (!new File("steamcmd").exists()) validSteamcmd = false;
-        if (!new File("steamcmd/steamcmd" + steamcmdExtension).exists()) validSteamcmd = false;
+        boolean validSteamcmd = new File("steamcmd/steamcmd" + steamcmdExtension).exists();
 
         System.out.println(" " + (validSteamcmd ? "installed" : "not installed"));
 
@@ -49,7 +46,7 @@ public class SteamcmdUtil {
 
     public static boolean installApp(String login, File destination, String app) {
         try {
-            SteamcmdUtil.check();
+            check();
             System.out.println("\nInstalling app " + app + " to " + destination + "...");
 
             Process steamcmdProcess = RuntimeUtil.runProcess("steamcmd/" + steamcmdExecutable + " " + steamcmdCommand
