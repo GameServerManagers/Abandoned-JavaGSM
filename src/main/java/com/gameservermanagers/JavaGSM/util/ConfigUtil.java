@@ -41,6 +41,9 @@ public class ConfigUtil {
         // get default config for all servers
         LinkedTreeMap<String, Object> newConfig = JavaGSM.gson.fromJson(ResourceUtil.getResourceAsString("gsm-server-default.json"), LinkedTreeMap.class);
 
+        // set config game type
+        newConfig.put("game", server.getClass().getName().replace("com.gameservermanagers.JavaGSM.servers.", ""));
+
         // get any server-specific config changes from defaultCommandLines
         if (defaultCommandLines.containsKey(server.getClass()))
             for (Map.Entry<String, Object> entry : defaultCommandLines.get(server.getClass()).entrySet())
