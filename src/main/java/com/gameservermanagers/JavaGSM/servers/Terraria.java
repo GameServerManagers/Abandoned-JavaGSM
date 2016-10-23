@@ -15,6 +15,7 @@ public class Terraria extends ServerInstaller {
         File tShockArchive = new File(destination, "tshock.zip");
         List<LinkedTreeMap<String, Object>> assetsFromApi = (List<LinkedTreeMap<String, Object>>) ((LinkedTreeMap<String, Object>) JavaGSM.gson.fromJson(DownloadUtil.getUrlAsString("https://api.github.com/repos/NyxStudios/TShock/releases/latest"), LinkedTreeMap.class)).get("assets");
         for (LinkedTreeMap<String, Object> asset : assetsFromApi) {
+            System.out.println(" " + asset.get("browser_download_url"));
             DownloadUtil.download((String) asset.get("browser_download_url"), tShockArchive);
             DownloadUtil.unzip(tShockArchive);
             DownloadUtil.deleteFile(tShockArchive);
