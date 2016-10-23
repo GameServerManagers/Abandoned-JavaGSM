@@ -1,9 +1,9 @@
 package com.gameservermanagers.JavaGSM.servers;
 
-        import com.gameservermanagers.JavaGSM.ServerInstaller;
-        import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
+import com.gameservermanagers.JavaGSM.ServerInstaller;
+import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 
-        import java.io.File;
+import java.io.File;
 
 @SuppressWarnings("unused")
 
