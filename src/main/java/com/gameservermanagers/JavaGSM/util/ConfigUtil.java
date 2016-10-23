@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("WeakerAccess")
 public class ConfigUtil {
 
     public static Map<Class<?>, HashMap<String, Object>> defaultCommandLines = new HashMap<Class<?>, HashMap<String, Object>>(){{
@@ -53,13 +53,6 @@ public class ConfigUtil {
         // save new config to file
         try {
             FileUtils.writeStringToFile(destination, JavaGSM.gson.toJson(newConfig), Charset.defaultCharset());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void writeHashMapToFile(HashMap<String, Object> config, File output) {
-        try {
-            FileUtils.writeStringToFile(output, JavaGSM.gson.toJson(config), Charset.defaultCharset());
         } catch (IOException e) {
             e.printStackTrace();
         }
