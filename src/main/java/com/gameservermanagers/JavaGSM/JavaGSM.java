@@ -1,10 +1,7 @@
 package com.gameservermanagers.JavaGSM;
 
 import com.gameservermanagers.JavaGSM.objects.ConfigMap;
-import com.gameservermanagers.JavaGSM.util.ResourceUtil;
-import com.gameservermanagers.JavaGSM.util.SleepUtil;
-import com.gameservermanagers.JavaGSM.util.UpdateUtil;
-import com.gameservermanagers.JavaGSM.util.UserInputUtil;
+import com.gameservermanagers.JavaGSM.util.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
@@ -25,7 +22,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class JavaGSM {
 
     public static final String version = "0.1.0";
@@ -161,62 +158,59 @@ public class JavaGSM {
      */
     private static void install(@Nullable String argument) {
         String gameServerName;
-        if (argument != null && argument.length() > 0) gameServerName = argument; else gameServerName = install_GetGame();
+        if (argument != null && argument.length() > 0) gameServerName = argument; else {
+            // don't attempt to understand this
+            Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new SubTypesScanner(false), new ResourcesScanner()).setUrls(ClasspathHelper.forClassLoader(Arrays.asList(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader()).toArray(new ClassLoader[0]))).filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.gameservermanagers.JavaGSM.servers"))));
+            Set<Class<? extends ServerInstaller>> availableServerClasses = reflections.getSubTypesOf(ServerInstaller.class);
+
+            List<String> choices = new LinkedList<>();
+            for (Class<?> serverClass : availableServerClasses) choices.add(serverClass.getSimpleName());
+            Collections.sort(choices);
+            gameServerName = choices.get(UserInputUtil.questionList("Which server do you want to install", choices));
+        }
 
         System.out.println("Installing " + gameServerName + " server...");
         System.out.println();
 
+        boolean serversFolderAvailable = new File("servers").exists() || new File("servers").mkdir();
+        if (!serversFolderAvailable) {
+            System.out.print("An error occurred creating the servers directory, aborting installation");
+            SleepUtil.printlnEllipsis();
+            return;
+        }
+
+        Method installer;
         try {
-            boolean serversFolderAvailable = new File("servers").exists() || new File("servers").mkdir();
-            if (!serversFolderAvailable) {
-                System.out.print("An error occurred creating the servers directory, aborting installation");
-                SleepUtil.printlnEllipsis();
-                return;
-            }
-
-            Method installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
-            File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/"));
-
-            if (destination.exists()) {
-                System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ": directory already exists. Aborting installation");
-                SleepUtil.printlnEllipsis();
-                return;
-            }
-            if (!destination.mkdir()) {
-                System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ": could not create directory. Aborting installation");
-                SleepUtil.printlnEllipsis();
-                return;
-            }
-
-            System.out.println();
-            installer.invoke(null, destination);
-            System.out.println();
+            installer = Class.forName("com.gameservermanagers.JavaGSM.servers." + gameServerName).getDeclaredMethod("install", File.class);
+        } catch (NoSuchMethodException e) {
+            System.out.println("An error occurred reflecting the installer method: method \"install\" not found in com.gameservermanagers.JavaGSM.servers." + gameServerName);
+            return;
         } catch (ClassNotFoundException e) {
             System.out.println("Invalid server \"" + gameServerName + "\"");
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            return;
+        }
+        File destination = new File("servers/" + UserInputUtil.questionString("What should the server's main directory be in ./servers/"));
+
+        if (destination.exists()) {
+            System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ": directory already exists. Aborting installation");
+            SleepUtil.printlnEllipsis();
+            return;
+        }
+        if (!destination.mkdir()) {
+            System.out.print("An error occurred creating the destination folder " + destination.getAbsolutePath() + ": could not create directory. Aborting installation");
+            SleepUtil.printlnEllipsis();
+            return;
+        }
+
+        System.out.println();
+        try {
+            installer.invoke(null, destination);
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             System.out.print("An unknown error occurred, please contact the developers with information about what you were doing");
             SleepUtil.printlnEllipsis();
         }
-    }
-
-    /**
-     * Get the name of a user-supplied game server class name to install
-     * @return the name of the server class name
-     */
-    private static String install_GetGame() {
-        // don't attempt to understand this
-        Reflections reflections = new Reflections(new ConfigurationBuilder().setScanners(new SubTypesScanner(false), new ResourcesScanner()).setUrls(ClasspathHelper.forClassLoader(Arrays.asList(ClasspathHelper.contextClassLoader(), ClasspathHelper.staticClassLoader()).toArray(new ClassLoader[0]))).filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.gameservermanagers.JavaGSM.servers"))));
-        Set<Class<?>> availableServerClasses = reflections.getSubTypesOf(Object.class);
-
-        List<String> choices = new LinkedList<>();
-        for (Class<?> serverClass : availableServerClasses) {
-            String[] actualNameArray = serverClass.getName().split("\\.");
-            String actualName = actualNameArray[actualNameArray.length - 1];
-            choices.add(actualName);
-        }
-        Collections.sort(choices);
-        return choices.get(UserInputUtil.questionList("Which server do you want to install", choices));
+        System.out.println();
     }
 
     /**
@@ -241,31 +235,43 @@ public class JavaGSM {
      */
     private static void update(@Nullable String argument) {
         String gameServerName;
-        if (argument != null && argument.length() > 0) gameServerName = argument; else gameServerName = update_GetGame();
-
-        System.out.println("Updating " + gameServerName + " server...");
-        System.out.println();
-
-        // TODO: call update on said server file (also make update for each game server available
-    }
-
-    /**
-     * Get the name of a user-supplied game server class name to update
-     * @return the name of the server class name
-     */
-    private static String update_GetGame() {
-        List<String> choices = new LinkedList<>();
-        File folder = new File("servers/");
-        File[] listOfFiles = folder.listFiles();
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isDirectory()) {
-                choices.add(listOfFiles[i].getName());
+        if (argument != null && argument.length() > 0) gameServerName = argument; else {
+            if (new File("servers").listFiles() != null) {
+                List<String> choices = new LinkedList<>();
+                for (File server : new File("servers").listFiles()) if (server.isDirectory() && new File(server, "gsm.json").exists()) choices.add(server.getPath().substring(8));
+                Collections.sort(choices);
+                gameServerName = choices.get(UserInputUtil.questionList("Which server do you want to update", choices));
+            } else {
+                System.out.println("No servers are installed. Try installing one with the -i flag.");
+                return;
             }
         }
+        File target = new File("servers/" + gameServerName);
+        String type = (String) ConfigUtil.getConfigOptionFromFile(new File(target, "gsm.json"), "game");
 
-        Collections.sort(choices);
-        return choices.get(UserInputUtil.questionList("Which server do you want to update", choices));
+        System.out.println("Updating server at \"" + target + "\" as type " + type + "...");
+        System.out.println();
+
+        Method updater;
+        try {
+            updater = Class.forName("com.gameservermanagers.JavaGSM.servers." + type).getDeclaredMethod("update", File.class);
+        } catch (NoSuchMethodException e) {
+            System.out.println("An error occurred reflecting the updater method: method \"update\" not found in com.gameservermanagers.JavaGSM.servers." + type);
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("An error occurred reflecting the updater method: class not found com.gameservermanagers.JavaGSM.servers." + type);
+            return;
+        }
+
+        System.out.println();
+        try {
+            updater.invoke(null, target);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            System.out.print("An unknown error occurred, please contact the developers with information about what you were doing");
+            SleepUtil.printlnEllipsis();
+        }
+        System.out.println();
     }
 
     //region Utilities
