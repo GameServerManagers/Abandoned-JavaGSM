@@ -24,6 +24,7 @@ public class ConfigUtil {
     public static void changeConfigOptionInFile(File file, String key, Object value) {
         try {
             LinkedTreeMap<String, Object> config = JavaGSM.gson.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), LinkedTreeMap.class);
+            config.put(key, value);
             FileUtils.writeStringToFile(file, JavaGSM.gson.toJson(config), Charset.defaultCharset());
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,9 +47,14 @@ public class ConfigUtil {
         newConfig.put("game", server.getSimpleName());
 
         // get any server-specific config changes from defaultCommandLines
-        if (defaultCommandLines.containsKey(server.getClass()))
-            for (Map.Entry<String, Object> entry : defaultCommandLines.get(server.getClass()).entrySet())
-                newConfig.put(entry.getKey(), entry.getValue());
+        try {
+            Class serverClass = Class.forName(server.getCanonicalName());
+            if (defaultCommandLines.containsKey(serverClass))
+                for (Map.Entry<String, Object> entry : defaultCommandLines.get(Class.forName(server.getCanonicalName())).entrySet())
+                    newConfig.put(entry.getKey(), entry.getValue());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // save new config to file
         try {
