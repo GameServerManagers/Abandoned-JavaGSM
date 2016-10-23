@@ -6,7 +6,7 @@ import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 import java.io.File;
 
 @SuppressWarnings("unused")
-public class ARKSurvivalEvolved implements ServerInstaller {
+public class ARKSurvivalEvolved extends ServerInstaller {
 
     public static void install(File destination) {
         boolean installedSuccessfully = SteamcmdUtil.installApp("anonymous", destination, "376030");

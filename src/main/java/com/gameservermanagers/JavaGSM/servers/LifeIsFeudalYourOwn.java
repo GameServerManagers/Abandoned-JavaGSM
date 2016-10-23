@@ -6,7 +6,7 @@ import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 import java.io.File;
 
 @SuppressWarnings("unused")
-public class LifeIsFeudalYourOwn implements ServerInstaller {
+public class LifeIsFeudalYourOwn extends ServerInstaller {
 
     public static void install(File destination) {
         boolean installedSuccessfully = SteamcmdUtil.installApp("anonymous", destination, "320850");

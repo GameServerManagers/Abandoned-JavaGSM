@@ -8,7 +8,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.io.File;
 import java.util.List;
 
-public class Terraria implements ServerInstaller {
+public class Terraria extends ServerInstaller {
 
     public static void install(File destination) {
         System.out.print("Obtaining latest download url...");

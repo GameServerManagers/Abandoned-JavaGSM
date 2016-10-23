@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class Minecraft implements ServerInstaller {
+public class Minecraft extends ServerInstaller {
 
     public static void install(File destination) {
         // populate possible server software

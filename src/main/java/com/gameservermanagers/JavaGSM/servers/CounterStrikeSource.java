@@ -6,7 +6,7 @@ import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 import java.io.File;
 
 @SuppressWarnings("unused")
-public class CounterStrikeSource implements ServerInstaller {
+public class CounterStrikeSource extends ServerInstaller {
 
     public static void install(File destination) {
         boolean installedSuccessfully = SteamcmdUtil.installApp("anonymous", destination, "232330");

@@ -5,7 +5,7 @@ import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 
 import java.io.File;
 
-public class Starbound implements ServerInstaller {
+public class Starbound extends ServerInstaller {
 
     public static void install(File destination) {
         boolean installedSuccessfully = SteamcmdUtil.installApp("anonymous", destination, "211820");

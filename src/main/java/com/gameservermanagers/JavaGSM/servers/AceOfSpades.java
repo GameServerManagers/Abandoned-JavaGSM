@@ -7,7 +7,7 @@ import com.gameservermanagers.JavaGSM.util.RuntimeUtil;
 
 import java.io.File;
 
-public class AceOfSpades implements ServerInstaller {
+public class AceOfSpades extends ServerInstaller {
 
     public static void install(File destination) {
         if (JavaGSM.isWindows) {

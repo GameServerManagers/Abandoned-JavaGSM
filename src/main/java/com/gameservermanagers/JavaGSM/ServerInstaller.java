@@ -1,3 +1,3 @@
 package com.gameservermanagers.JavaGSM;
 
-public interface ServerInstaller {}
+public class ServerInstaller {}

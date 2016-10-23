@@ -5,7 +5,7 @@ import com.gameservermanagers.JavaGSM.util.SteamcmdUtil;
 
 import java.io.File;
 
-public class SvenCoop implements ServerInstaller {
+public class SvenCoop extends ServerInstaller {
 
     public static void install(File destination) {
         boolean installedSuccessfully = SteamcmdUtil.installApp("anonymous", destination, "276060");
