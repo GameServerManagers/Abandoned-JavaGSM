@@ -50,7 +50,7 @@ public class ConfigUtil {
         try {
             Class serverClass = Class.forName(server.getCanonicalName());
             if (defaultCommandLines.containsKey(serverClass))
-                for (Map.Entry<String, Object> entry : defaultCommandLines.get(Class.forName(server.getCanonicalName())).entrySet())
+                for (Map.Entry<String, Object> entry : defaultCommandLines.get(serverClass).entrySet())
                     newConfig.put(entry.getKey(), entry.getValue());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
