@@ -272,6 +272,13 @@ public class JavaGSM {
             SleepUtil.printlnEllipsis();
         }
         System.out.println();
+
+        /*
+        TODO: Add and populate this function for each server.
+        public static void update() {
+
+    }   }
+        */
     }
 
     //region Utilities
