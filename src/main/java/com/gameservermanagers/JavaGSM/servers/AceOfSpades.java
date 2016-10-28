@@ -14,7 +14,7 @@ public class AceOfSpades extends ServerInstaller {
             // download pre-compiled binaries and stuff
             DownloadUtil.download("https://github.com/NateShoffner/PySnip/releases/download/f8808c5/pysnip-feature_server-0.75.zip");
             DownloadUtil.unzip(new File("pysnip-feature_server-0.75.zip"), destination);
-            new File("pysnip-feature_server-0.75.zip").delete();
+            DownloadUtil.deleteFile(new File("pysnip-feature_server-0.75.zip"));
             DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "dist"));
             System.out.println();
         } else {
