@@ -114,7 +114,7 @@ public class JavaGSM {
      * @param argument Advanced automatic menu traversal, WIP
      */
     private static void configure(@Nullable String argument) {
-        // TODO:Make Configure Command
+        // TODO
     }
 
     /**
@@ -124,10 +124,6 @@ public class JavaGSM {
         // check for updates
         UpdateUtil.checkForUpdates();
         System.out.println();
-
-        // save the current millis count to the config
-        config.put("lastUpdateCheck", System.currentTimeMillis());
-        saveConfig();
     }
 
     /**
