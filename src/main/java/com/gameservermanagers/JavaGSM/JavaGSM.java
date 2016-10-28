@@ -287,7 +287,7 @@ public class JavaGSM {
             e.printStackTrace();
         }
     }
-    private static void saveConfig() {
+    public static void saveConfig() {
         if (!configFile.exists()) {
             ResourceUtil.copyResourceToFile("gsm-default.json", configFile);
             return;

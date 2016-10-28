@@ -34,12 +34,13 @@ public class UpdateUtil {
 
         System.out.println(" | update available");
 
-        //TODO: make this actually work
         try {
             String latestUrl = "http://scarsz.tech:8080/job/JavaGSM/lastSuccessfulBuild/artifact/target/JavaGSM.jar";
             File destination = new File(JavaGSM.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-            DownloadUtil.download("http://scarsz.tech:8080/job/UpdateManager/lastSuccessfulBuild/artifact/target/UpdateManager.jar");
-            RuntimeUtil.runProcess("java -jar JavaGSM.jar \"" + latestUrl + "\" \"" + destination.getAbsolutePath() + "\"");
+            DownloadUtil.download(latestUrl, destination);
+            JavaGSM.config.put("lastUpdateCheck", System.currentTimeMillis());
+            JavaGSM.saveConfig();
+            RuntimeUtil.runProcess("java -jar JavaGSM.jar");
             System.exit(0);
         } catch (URISyntaxException e) {
             e.printStackTrace();
