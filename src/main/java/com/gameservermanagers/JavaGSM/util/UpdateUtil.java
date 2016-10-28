@@ -22,6 +22,7 @@ public class UpdateUtil {
         List<Integer> latestNumbers = new LinkedList<>();
         for (String s : latest.split("\\.")) latestNumbers.add(Integer.valueOf(s));
 
+        // semantic version update checking is annoying
         List<Boolean> results = new LinkedList<>();
         for (int i = 0; i < 3; i++) results.add(currentNumbers.get(i) < latestNumbers.get(i));
         boolean updateAvailable =
@@ -52,7 +53,7 @@ public class UpdateUtil {
             DownloadUtil.download(latestUrl, destination);
 
             // TODO: spawn child process with same arguments as this process
-            RuntimeUtil.runProcess("java -jar " + destination.getAbsolutePath());
+            RuntimeUtil.runProcessWaitFor("java -jar \"" + destination.getAbsolutePath() + "\"");
 
             System.exit(0);
         } catch (URISyntaxException e) {
