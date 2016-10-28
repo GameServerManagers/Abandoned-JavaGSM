@@ -106,6 +106,8 @@ public class JavaGSM {
                     System.out.println("Unknown flag \"" + args[i] + (argument == null ? "" : " " + argument) + "\"");
                     break;
             }
+
+            if (i != args.length - 1 || !isWindows) System.out.println();
         }
     }
 
@@ -123,7 +125,6 @@ public class JavaGSM {
     private static void forceUpdate() {
         // check for updates
         UpdateUtil.checkForUpdates();
-        System.out.println();
     }
 
     /**
@@ -206,7 +207,6 @@ public class JavaGSM {
             System.out.print("An unknown error occurred, please contact the developers with information about what you were doing");
             SleepUtil.printlnEllipsis();
         }
-        System.out.println();
     }
 
     /**
@@ -214,7 +214,42 @@ public class JavaGSM {
      * @param argument The given server to start
      */
     private static void start(@Nullable String argument) {
-        // TODO
+        String gameServerName;
+        if (argument != null && argument.length() > 0) gameServerName = argument; else {
+            if (new File("servers").listFiles() != null) {
+                List<String> choices = new LinkedList<>();
+                for (File server : new File("servers").listFiles()) if (server.isDirectory() && new File(server, "gsm.json").exists()) choices.add(server.getPath().substring(8));
+                Collections.sort(choices);
+                gameServerName = choices.get(UserInputUtil.questionList("Which server do you want to start", choices));
+            } else {
+                System.out.println("No servers are installed. Try installing one with the -i flag.");
+                return;
+            }
+        }
+        File target = new File("servers/" + gameServerName);
+        String game = (String) ConfigUtil.getConfigOptionFromFile(new File(target, "gsm.json"), "game");
+
+        System.out.println("Starting server at \"" + target + "\" as game " + game + "...");
+        System.out.println();
+
+        Method starter;
+        try {
+            starter = Class.forName("com.gameservermanagers.JavaGSM.servers." + game).getDeclaredMethod("start", File.class);
+        } catch (NoSuchMethodException e) {
+            System.out.println("An error occurred reflecting the starter method: method \"start\" not found in com.gameservermanagers.JavaGSM.servers." + game);
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("An error occurred reflecting the starter method: class not found com.gameservermanagers.JavaGSM.servers." + game);
+            return;
+        }
+
+        try {
+            starter.invoke(null, target);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            System.out.print("An unknown error occurred, please contact the developers with information about what you were doing");
+            SleepUtil.printlnEllipsis();
+        }
     }
 
     /**
@@ -243,19 +278,19 @@ public class JavaGSM {
             }
         }
         File target = new File("servers/" + gameServerName);
-        String type = (String) ConfigUtil.getConfigOptionFromFile(new File(target, "gsm.json"), "game");
+        String game = (String) ConfigUtil.getConfigOptionFromFile(new File(target, "gsm.json"), "game");
 
-        System.out.println("Updating server at \"" + target + "\" as type " + type + "...");
+        System.out.println("Updating server at \"" + target + "\" as game " + game + "...");
         System.out.println();
 
         Method updater;
         try {
-            updater = Class.forName("com.gameservermanagers.JavaGSM.servers." + type).getDeclaredMethod("update", File.class);
+            updater = Class.forName("com.gameservermanagers.JavaGSM.servers." + game).getDeclaredMethod("update", File.class);
         } catch (NoSuchMethodException e) {
-            System.out.println("An error occurred reflecting the updater method: method \"update\" not found in com.gameservermanagers.JavaGSM.servers." + type);
+            System.out.println("An error occurred reflecting the updater method: method \"update\" not found in com.gameservermanagers.JavaGSM.servers." + game);
             return;
         } catch (ClassNotFoundException e) {
-            System.out.println("An error occurred reflecting the updater method: class not found com.gameservermanagers.JavaGSM.servers." + type);
+            System.out.println("An error occurred reflecting the updater method: class not found com.gameservermanagers.JavaGSM.servers." + game);
             return;
         }
 
@@ -267,7 +302,6 @@ public class JavaGSM {
             System.out.print("An unknown error occurred, please contact the developers with information about what you were doing");
             SleepUtil.printlnEllipsis();
         }
-        System.out.println();
     }
 
     //region Utilities

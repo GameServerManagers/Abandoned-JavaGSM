@@ -17,7 +17,7 @@ public class ConfigUtil {
 
     public static Map<Class<?>, HashMap<String, Object>> defaultCommandLines = new HashMap<Class<?>, HashMap<String, Object>>(){{
         put(Minecraft.class, new HashMap<String, Object>(){{
-            put("commandline", "java -Xmx{MEMORY} -jar {JARFILE} nogui");
+            put("commandline", "java -Xmx{MEMORY} -server -jar {JARFILE} nogui");
         }});
     }};
 
@@ -30,14 +30,16 @@ public class ConfigUtil {
             e.printStackTrace();
         }
     }
-    public static Object getConfigOptionFromFile(File file, String key) {
+    public static LinkedTreeMap<String, Object> getConfigFromFile(File file) {
         try {
-            LinkedTreeMap<String, Object> config = JavaGSM.gson.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), LinkedTreeMap.class);
-            return config.get(key);
+            return JavaGSM.gson.fromJson(FileUtils.readFileToString(file, Charset.defaultCharset()), LinkedTreeMap.class);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+    }
+    public static Object getConfigOptionFromFile(File file, String key) {
+        return getConfigFromFile(file).get(key);
     }
     public static void writeDefaultConfigToFile(Class<? extends ServerInstaller> server, File destination) {
         // get default config for all servers

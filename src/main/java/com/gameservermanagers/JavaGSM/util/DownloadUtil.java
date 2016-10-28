@@ -27,13 +27,16 @@ public class DownloadUtil {
     }
 
     public static void deleteFile(File fileToDelete) {
-        System.out.print("Deleting file \"" + fileToDelete.getAbsolutePath() + "\"... ");
+        deleteFile(fileToDelete, false);
+    }
+    public static void deleteFile(File fileToDelete, boolean quiet) {
+        if (!quiet) System.out.print("Deleting file \"" + fileToDelete.getAbsolutePath() + "\"... ");
         if (!fileToDelete.exists()) {
-            System.out.println("failed. File doesn't exist.");
+            if (!quiet) System.out.println("failed. File doesn't exist.");
         } else if (!fileToDelete.delete()) {
-            System.out.println("failed. Permissions!?");
+            if (!quiet) System.out.println("failed. Permissions!?");
         } else {
-            System.out.println(fileToDelete.exists() ? "failed." : "success");
+            if (!quiet) System.out.println(fileToDelete.exists() ? "failed." : "success");
         }
     }
 

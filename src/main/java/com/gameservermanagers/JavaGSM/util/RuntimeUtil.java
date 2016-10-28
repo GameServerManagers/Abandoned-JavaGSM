@@ -10,11 +10,14 @@ public class RuntimeUtil {
         return runProcess(command, new File("."));
     }
     public static Process runProcess(String command, File directory) {
-        try {
+        return runProcess(command, directory, true);
+    }
+    public static Process runProcess(String command, File directory, boolean gobble) {
+            try {
             System.out.println("Running command \"" + command + "\"");
             Process p = Runtime.getRuntime().exec(command, null, directory);
 
-            if (p != null) {
+            if (p != null && gobble) {
                 StreamGobbler outputGobbler = new StreamGobbler(p.getInputStream());
                 outputGobbler.start();
                 StreamGobbler errorGobbler = new StreamGobbler(p.getErrorStream());
