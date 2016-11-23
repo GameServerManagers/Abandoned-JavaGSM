@@ -9,3 +9,4 @@ dependency-reduced-pom.xml
 /bin/
 .idea
 misc.xml
+.floo*
