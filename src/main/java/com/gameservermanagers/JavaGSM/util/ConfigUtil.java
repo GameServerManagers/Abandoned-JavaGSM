@@ -15,7 +15,7 @@ import java.util.Map;
 @SuppressWarnings("WeakerAccess")
 public class ConfigUtil {
 
-    public static Map<Class<?>, HashMap<String, Object>> defaultCommandLines = new HashMap<Class<?>, HashMap<String, Object>>(){{
+    public static Map<Class<?>, HashMap<String, Object>> defaultConfigFileChanges = new HashMap<Class<?>, HashMap<String, Object>>(){{
         put(Minecraft.class, new HashMap<String, Object>(){{
             put("commandline", "java -Xmx{MEMORY} -server -jar {JARFILE} nogui");
         }});
@@ -48,11 +48,11 @@ public class ConfigUtil {
         // set config game type
         newConfig.put("game", server.getSimpleName());
 
-        // get any server-specific config changes from defaultCommandLines
+        // get any server-specific config changes from defaultConfigFileChanges
         try {
             Class serverClass = Class.forName(server.getCanonicalName());
-            if (defaultCommandLines.containsKey(serverClass))
-                for (Map.Entry<String, Object> entry : defaultCommandLines.get(serverClass).entrySet())
+            if (defaultConfigFileChanges.containsKey(serverClass))
+                for (Map.Entry<String, Object> entry : defaultConfigFileChanges.get(serverClass).entrySet())
                     newConfig.put(entry.getKey(), entry.getValue());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

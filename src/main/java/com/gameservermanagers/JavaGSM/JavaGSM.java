@@ -55,9 +55,9 @@ public class JavaGSM {
         config.defaults = gson.fromJson(ResourceUtil.getResourceAsString("gsm-default.json"), LinkedTreeMap.class);
         System.out.println(" done");
 
-        // check if last update check was over 24 hours ago
+        // check if last update check was over a day ago
         long diff = (long) (System.currentTimeMillis() - (double) config.get("lastUpdateCheck"));
-        if (TimeUnit.MILLISECONDS.toDays(diff) >  1) forceUpdate();
+        if (TimeUnit.MILLISECONDS.toDays(diff) > 1) forceUpdate();
 
         // if no arguments have been given show help
         if (args.length == 0) {

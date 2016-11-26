@@ -51,7 +51,7 @@ public class Minecraft extends ServerInstaller {
         }
 
         // ask how much memory should be max for this server
-        String memory = UserInputUtil.questionString("How much memory should be this server use (ex. 1G, 512M)").toUpperCase();
+        String memory = UserInputUtil.questionString("How much memory should this server use (ex. 1G, 512M)").toUpperCase();
 
         // write user's input to eula acceptance to file
         boolean userAgreesToEula = UserInputUtil.questionYesNo("Do you agree to follow the Minecraft EULA");
