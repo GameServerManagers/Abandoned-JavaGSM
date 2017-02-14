@@ -6,9 +6,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.gameservermanagers.JavaGSM.JavaGSM;
 import com.gameservermanagers.JavaGSM.ServerInstaller;
+import com.gameservermanagers.JavaGSM.util.ConfigUtil;
 import com.gameservermanagers.JavaGSM.util.DownloadUtil;
+import com.gameservermanagers.JavaGSM.util.RuntimeUtil;
 import com.gameservermanagers.JavaGSM.util.UserInputUtil;
+import com.google.gson.internal.LinkedTreeMap;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -44,6 +48,9 @@ public class TeamSpeak3 extends ServerInstaller {
 	           return;
 	        }
 	        
+	     File ts3Config = new File(destination, "gsm.json");
+	     ConfigUtil.writeDefaultConfigToFile(TeamSpeak3.class, ts3Config);
+	     
 	 }
 	 
 	 // Installs 32-bit version of TeamSpeak 3 Server
@@ -87,14 +94,12 @@ public class TeamSpeak3 extends ServerInstaller {
 		 DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "teamspeak3-server_linux_amd64"), true);
 	 }
 	 
-	 // Teamspeak Server for Mac only supports 64-bit Mac OS systems.
-	 public static void install_TS3Mac(File destination) {
-		 String zipFile = "teamspeak3-server_mac-3.0.13.6.zip";
-		 String downloadURL = "http://dl.4players.de/ts/releases/3.0.13.6/" + zipFile;
-		 DownloadUtil.download(downloadURL, new File(destination, zipFile));
-		 DownloadUtil.unzip(new File(zipFile), destination);
-		 DownloadUtil.deleteFile(new File(zipFile));
-		 DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "dist"), true);
-		 System.out.println();
+	 public static void start(File target) {
+		 LinkedTreeMap<String, Object> config = ConfigUtil.getConfigFromFile(new File(target, "gsm.json"));
+		 if(JavaGSM.isWindows) {
+			 RuntimeUtil.runProcess("cmd /C ts3server", target, false);
+		 } else if(JavaGSM.isLinux) {
+			 RuntimeUtil.runProcess("./ts3server_startscript.sh start", target, false);
+		 }
 	 }
 }

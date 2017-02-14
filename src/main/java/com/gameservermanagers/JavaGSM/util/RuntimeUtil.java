@@ -14,7 +14,7 @@ public class RuntimeUtil {
     }
     public static Process runProcess(String command, File directory, boolean gobble) {
             try {
-            System.out.println("Running command \"" + command + "\"");
+            System.out.println("Running command \"" + command + "\" in " + directory.getAbsolutePath());
             Process p = Runtime.getRuntime().exec(command, null, directory);
 
             if (p != null && gobble) {
