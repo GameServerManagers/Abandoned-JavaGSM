@@ -1,0 +1,100 @@
+package com.gameservermanagers.JavaGSM.servers;
+
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.gameservermanagers.JavaGSM.ServerInstaller;
+import com.gameservermanagers.JavaGSM.util.DownloadUtil;
+import com.gameservermanagers.JavaGSM.util.UserInputUtil;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
+@SuppressWarnings({"unused", "WeakerAccess"})
+public class TeamSpeak3 extends ServerInstaller {
+	
+	  private static String getSoftware(String prompt, String filter) {
+	        // populate possible server software
+	        List<String> availableServerSoftware = new LinkedList<>();
+	        for (Method method : TeamSpeak3.class.getDeclaredMethods())
+	            if (method.getName().startsWith(filter)) availableServerSoftware.add(method.getName().substring(8));
+	        Collections.sort(availableServerSoftware);
+
+	        return availableServerSoftware.get(UserInputUtil.questionList(prompt, availableServerSoftware));
+	    }
+	
+	 public static void install(File destination) {
+		 String requestedSoftware = getSoftware("Which server software do you want to install", "install_");
+		 System.out.println("Installing " + requestedSoftware + "...\n");
+		 
+	        String ts3File = null;
+	        for(Method method : TeamSpeak3.class.getDeclaredMethods()) 
+	        	if(method.getName().equals("install_" + requestedSoftware)) try {
+	        			ts3File = String.valueOf(method.invoke(null, destination));
+	        			System.out.println();
+	        		} catch(Exception e) {
+	        			e.printStackTrace();
+	       }
+	        
+	        if(ts3File == null) {
+	           System.out.println("Installation failed.");
+	           return;
+	        }
+	        
+	 }
+	 
+	 // Installs 32-bit version of TeamSpeak 3 Server
+	 public static void install_TS3Windows32(File destination) {
+		 String zipFile = "teamspeak3-server_win32-3.0.13.6.zip";
+		 String downloadURL = "http://dl.4players.de/ts/releases/3.0.13.6/" + zipFile;
+		 DownloadUtil.download(downloadURL);
+		 DownloadUtil.unzip(new File(zipFile), destination);
+		 DownloadUtil.deleteFile(new File(zipFile));
+		 DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "teamspeak3-server_win32"), true);
+		 System.out.println();
+		 
+	 }
+	 
+	 // Installs 64-bit version of TeamSpeak 3 Server
+	 public static void install_TS3Windows64(File destination) {
+		 String zipFile = "teamspeak3-server_win64-3.0.13.6.zip";
+		 String downloadURL = "http://dl.4players.de/ts/releases/3.0.13.6/" + zipFile;
+		 DownloadUtil.download(downloadURL);
+		 DownloadUtil.unzip(new File(zipFile), destination);
+		 DownloadUtil.deleteFile(new File(zipFile));
+		 DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "teamspeak3-server_win64"), true);
+		 System.out.println();
+	 }
+ 
+	 public static void install_TS3Linux32(File destination) {
+		 String tarFile = "teamspeak3-server_linux_x86-3.0.13.6.tar.bz2";
+		 String downloadURL = "http://dl.4players.de/ts/releases/3.0.13.6/" + tarFile;
+		 DownloadUtil.download(downloadURL);
+		 DownloadUtil.unbzip(new File(tarFile), destination);
+		 DownloadUtil.deleteFile(new File(tarFile));
+		 DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "teamspeak3-server_linux_x86"), true);
+	 }
+	 
+	 public static void install_TS3Linux64(File destination) {
+		 String tarFile = "teamspeak3-server_linux_amd64-3.0.13.6.tar.bz2";
+		 String downloadURL = "http://dl.4players.de/ts/releases/3.0.13.6/" + tarFile;
+		 DownloadUtil.download(downloadURL);
+		 DownloadUtil.unbzip(new File(tarFile), destination);
+		 DownloadUtil.deleteFile(new File(tarFile));
+		 DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "teamspeak3-server_linux_amd64"), true);
+	 }
+	 
+	 // Teamspeak Server for Mac only supports 64-bit Mac OS systems.
+	 public static void install_TS3Mac(File destination) {
+		 String zipFile = "teamspeak3-server_mac-3.0.13.6.zip";
+		 String downloadURL = "http://dl.4players.de/ts/releases/3.0.13.6/" + zipFile;
+		 DownloadUtil.download(downloadURL, new File(destination, zipFile));
+		 DownloadUtil.unzip(new File(zipFile), destination);
+		 DownloadUtil.deleteFile(new File(zipFile));
+		 DownloadUtil.moveAllChildrenOfFolderToParent(new File(destination, "dist"), true);
+		 System.out.println();
+	 }
+}
