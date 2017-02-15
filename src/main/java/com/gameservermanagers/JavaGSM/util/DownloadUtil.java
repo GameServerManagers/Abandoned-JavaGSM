@@ -112,7 +112,7 @@ public class DownloadUtil {
         System.out.print("Ungzipping " + source.getName() + " to " + destination.getPath() + "...");
 
         try {
-            ArchiverFactory.createArchiver("tar", "gz").extract(source, destination);
+            ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.GZIP).extract(source, destination);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -123,12 +123,17 @@ public class DownloadUtil {
     public static void unbzip(File source) {
     	unbzip(source, source.getParentFile());
     }
-    
     public static void unbzip(File source, File destination) {
-         try {
-             ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.BZIP2).extract(source, destination);
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
+        long startTime = System.currentTimeMillis();
+        System.out.print("Unbzipping " + source.getName() + " to " + destination.getPath() + "...");
+
+        try {
+            ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.BZIP2).extract(source, destination);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(" done in " + (System.currentTimeMillis() - startTime) + "ms");
     }
+
 }
