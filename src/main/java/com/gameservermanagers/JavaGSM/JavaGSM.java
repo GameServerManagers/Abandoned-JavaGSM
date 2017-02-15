@@ -333,13 +333,13 @@ public class JavaGSM {
     // region Header
     private static void header() {
         // Looks weird due to escape characters, run to see actual ascii "Art"
-        System.out.println ("       _                   _____  _____ __  __ ");
-        System.out.println ("      | |                 / ____|/ ____|  \\/  |");
-        System.out.println ("      | | __ ___   ____ _| |  __| (___ | \\  / |");
-        System.out.println ("  _   | |/ _` \\ \\ / / _` | | |_ |\\___ \\| |\\/| |");
-        System.out.println (" | |__| | (_| |\\ V / (_| | |__| |____) | |  | |");
-        System.out.println ("  \\____/ \\__,_| \\_/ \\__,_|\\_____|_____/|_|  |_|");
-        System.out.println ("                                               ");
+        System.out.println("       _                   _____  _____ __  __ ");
+        System.out.println("      | |                 / ____|/ ____|  \\/  |");
+        System.out.println("      | | __ ___   ____ _| |  __| (___ | \\  / |");
+        System.out.println("  _   | |/ _` \\ \\ / / _` | | |_ |\\___ \\| |\\/| |");
+        System.out.println(" | |__| | (_| |\\ V / (_| | |__| |____) | |  | |");
+        System.out.println("  \\____/ \\__,_| \\_/ \\__,_|\\_____|_____/|_|  |_|");
+        System.out.println("                                               ");
     }
     //endregion
     //endregion
