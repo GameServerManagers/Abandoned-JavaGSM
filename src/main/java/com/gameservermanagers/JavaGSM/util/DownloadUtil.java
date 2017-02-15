@@ -7,7 +7,9 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.jsoup.Jsoup;
+import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.ArchiverFactory;
+import org.rauschig.jarchivelib.CompressionType;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,7 +112,23 @@ public class DownloadUtil {
         System.out.print("Ungzipping " + source.getName() + " to " + destination.getPath() + "...");
 
         try {
-            ArchiverFactory.createArchiver("tar", "gz").extract(source, destination);
+            ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.GZIP).extract(source, destination);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(" done in " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
+    public static void unbzip(File source) {
+    	unbzip(source, source.getParentFile());
+    }
+    public static void unbzip(File source, File destination) {
+        long startTime = System.currentTimeMillis();
+        System.out.print("Unbzipping " + source.getName() + " to " + destination.getPath() + "...");
+
+        try {
+            ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.BZIP2).extract(source, destination);
         } catch (IOException e) {
             e.printStackTrace();
         }
